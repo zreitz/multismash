@@ -1,0 +1,62 @@
+import os
+
+#### Initialize input ####
+
+# Get job prefix and confirm config exists
+try:
+    JOB_PREFIX = config["job_prefix"]
+except KeyError as e:
+    print("Error finding a job prefix. Did you use a --configfile?")
+    raise e
+RESULT_DIR = f"results/{JOB_PREFIX}"
+
+# Gather input files
+DATA_DIR = os.path.expanduser(config["data_dir"]) # expanduser allows ~
+DATA_EXT = config["data_ext"]
+
+# antismash results as input
+if not DATA_EXT:
+    GENOMES, toss = glob_wildcards(f"{DATA_DIR}/{{genome}}/{{toss}}.json")
+    AS_DIR = DATA_DIR
+    print(f"{len(GENOMES)} antiSMASH results found")
+
+# genome files as input
+else:
+    GENOMES, = glob_wildcards(f"{DATA_DIR}/{{genome}}.{DATA_EXT}")
+    print(f"{len(GENOMES)} {DATA_EXT} files found")
+    AS_DIR = f"{RESULT_DIR}/antismash"
+if not GENOMES:
+    raise OSError(f"Error! Unable to find data in '{DATA_DIR}' "
+                  f"with extension '{DATA_EXT}'.")
+
+
+
+
+rule all:
+    input:
+        expand(f"{AS_DIR}/{{genomes}}", genomes = GENOMES),
+        f"{RESULT_DIR}/all_regions.tsv"
+
+
+#### AntiSMASH rules ####
+
+# TODO: give logging on failed runs - check if a dir is empty after this
+# TODO: gff support
+rule run_antismash:
+    input:
+        genomes = f"{DATA_DIR}/{{GENOMES}}.{DATA_EXT}",
+    params:
+        antismash = config["antismash_command"],
+        antismash_flags = config["antismash_flags"],
+    output: directory(f"{AS_DIR}/{{GENOMES}}")
+    conda: config["antismash_conda"]
+    shell: "{params.antismash} {input.genomes} --output-dir {output} "
+                "-c 1 {params.antismash_flags} || mkdir -p {output}"
+
+
+rule tabulate_antismash:
+    input: expand(f"{AS_DIR}/{{genomes}}/", genomes = GENOMES)
+    params: AS_DIR
+    output: f"{RESULT_DIR}/all_regions.tsv"
+    shell: "python workflow/scripts/tabulate_regions.py {params} {output}"
+

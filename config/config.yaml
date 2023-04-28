@@ -1,0 +1,25 @@
+#### REQUIRED VALUES ####
+
+## What is the name of the job? Results will be stored in `results/job_prefix/`
+job_prefix: "example"
+
+# Parent directory for the input data, which can be genomes or antismash folders
+data_dir: "example"
+
+## File extension to be used
+# Use `gbff`, `gbk`, `fna`, etc for genomes that will be run through antismash
+# Leave blank for existing antismash results
+data_ext: gbff
+
+# For fasta files, GFF3 gene features can be provided separately. Files must
+#   have the same basename, ex: `A01.fa` and `A01.gff`.
+gff3_ext: null  # gff
+# TODO: NOT IMPLEMENTED
+
+## antiSMASH configuration
+# Until antiSMASH is conda installable, you'll have to provide your own
+#   installation.
+antismash_command: "antismash" # or maybe `python /path/to/run_antismash.py`
+antismash_conda: "antismash7"
+antismash_flags: "--genefinding-tool none --minimal --skip-zip-file"
+
