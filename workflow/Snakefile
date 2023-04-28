@@ -55,7 +55,7 @@ rule run_antismash:
 
 
 rule tabulate_antismash:
-    input: expand(f"{AS_DIR}/{{genomes}}/", genomes = GENOMES)
+    input: expand(f"{AS_DIR}/{{genomes}}", genomes = GENOMES)
     params: AS_DIR
     output: f"{RESULT_DIR}/all_regions.tsv"
     shell: "python workflow/scripts/tabulate_regions.py {params} {output}"
