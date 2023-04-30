@@ -63,7 +63,7 @@ def main(asdir: str, outpath: str, contig: bool = False, hybrid: bool = False):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser("Given a bunch of antismash results, count the BGC regions")
+    parser = argparse.ArgumentParser(description="Given a bunch of antismash results, count the BGC regions")
 
     parser.add_argument("asdir", type=str,
                         help="directory containing antiSMASH directories")
