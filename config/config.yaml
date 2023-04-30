@@ -17,11 +17,11 @@ gff3_ext: null  # gff
 # TODO: NOT IMPLEMENTED
 
 ## antiSMASH configuration
-# Until antiSMASH is conda installable, you'll have to provide your own
+# Until antiSMASH 7 is conda installable, you'll have to provide your own
 #   installation.
 antismash_command: "antismash" # or maybe `python /path/to/run_antismash.py`
 antismash_conda: "antismash7"
-antismash_flags: "--genefinding-tool none --minimal --skip-zip-file"
+antismash_flags: "--genefinding-tool none --minimal"
 
 ## count_regions configuration
 # Should regions be counted by individual contigs rather than genome?
@@ -29,3 +29,9 @@ contig: False
 # Should hybrid regions be counted once as 'hybrid' rather than counted for each BGC class?
 hybrid: False
 
+## BiG-SCAPE configuration
+# BiG-SCAPE is likewise not conda installable
+bigscape_command: "bigscape.py"
+bigscape_conda: "bigscape"
+bigscape_flags:   # in addition to -i, -o, and pfam_dir
+  "--mix --no_classify --include_singletons --clans-off --cutoffs 0.3 0.4 0.5 0.6 0.7"
