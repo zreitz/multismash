@@ -1,0 +1,13 @@
+{
+  "input_file": "has3",
+  "records": [
+    {
+      "name": "contig1",
+      "areas": [
+        {"products": ["NRPS", "PKS"]},
+        {"products": ["NRPS"]},
+        {"products": ["PKS"]}
+      ]
+    }
+  ]
+}

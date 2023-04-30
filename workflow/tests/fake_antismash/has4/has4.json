@@ -1,0 +1,19 @@
+{
+  "input_file": "has4",
+  "records": [
+    {
+      "name": "contig1",
+      "areas": [
+        {"products": ["terpene"]},
+        {"products": ["terpene"]}
+      ]
+    },
+    {
+      "name": "contig2",
+      "areas": [
+        {"products": ["terpene"]},
+        {"products": ["terpene"]}
+      ]
+    }
+  ]
+}

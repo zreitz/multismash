@@ -34,8 +34,10 @@ if not GENOMES:
 
 rule all:
     input:
-        expand(f"{AS_DIR}/{{genomes}}", genomes = GENOMES),
-        f"{RESULT_DIR}/all_regions.tsv"
+        # tabulate_regions
+        f"{RESULT_DIR}/all_regions.tsv",
+        # count_regions
+        f"{RESULT_DIR}/region_counts.tsv"
 
 
 #### AntiSMASH rules ####
@@ -54,9 +56,19 @@ rule run_antismash:
                 "-c 1 {params.antismash_flags} || mkdir -p {output}"
 
 
-rule tabulate_antismash:
+rule tabulate_regions:
     input: expand(f"{AS_DIR}/{{genomes}}", genomes = GENOMES)
     params: AS_DIR
     output: f"{RESULT_DIR}/all_regions.tsv"
     shell: "python workflow/scripts/tabulate_regions.py {params} {output}"
 
+
+
+rule count_regions:
+    input: expand(f"{AS_DIR}/{{genomes}}", genomes = GENOMES)
+    params:
+        asdir = AS_DIR,
+        contig = "--contig" if config["contig"] else "",
+        hybrid= "--hybrid" if config["hybrid"] else ""
+    output: f"{RESULT_DIR}/region_counts.tsv"
+    shell: "python workflow/scripts/count_regions.py {params.asdir} {output} {params.contig} {params.hybrid}"

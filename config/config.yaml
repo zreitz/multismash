@@ -23,3 +23,9 @@ antismash_command: "antismash" # or maybe `python /path/to/run_antismash.py`
 antismash_conda: "antismash7"
 antismash_flags: "--genefinding-tool none --minimal --skip-zip-file"
 
+## count_regions configuration
+# Should regions be counted by individual contigs rather than genome?
+contig: False
+# Should hybrid regions be counted once as 'hybrid' rather than counted for each BGC class?
+hybrid: False
+
