@@ -19,7 +19,7 @@ options:
   --hybrid    hybrid regions are only counted once, as 'hybrid'
 ```
 
-Example output: `results/example/region_counts.tsv`
+Example output: [results/example/region_counts.tsv](results/example/region_counts.tsv)
 
 ### tabulate_regions.py
 Given a bunch of antismash results, tabulate BGC regions
@@ -35,4 +35,4 @@ options:
   -h, --help  show this help message and exit
 ```
 
-Example output: `results/example/all_regions.tsv`
+Example output: [results/example/all_regions.tsv](results/example/all_regions.tsv)
