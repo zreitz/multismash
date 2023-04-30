@@ -29,7 +29,8 @@ if not GENOMES:
     raise OSError(f"Error! Unable to find data in '{DATA_DIR}' "
                   f"with extension '{DATA_EXT}'.")
 
-
+## Result locations
+BIG_DIR = f"{RESULT_DIR}/bigscape"
 
 
 rule all:
@@ -37,7 +38,9 @@ rule all:
         # tabulate_regions
         f"{RESULT_DIR}/all_regions.tsv",
         # count_regions
-        f"{RESULT_DIR}/region_counts.tsv"
+        f"{RESULT_DIR}/region_counts.tsv",
+        # bigscape
+        f"{BIG_DIR}.tar.gz"
 
 
 #### AntiSMASH rules ####
@@ -55,14 +58,11 @@ rule run_antismash:
     shell: "{params.antismash} {input.genomes} --output-dir {output} "
                 "-c 1 {params.antismash_flags} || mkdir -p {output}"
 
-
 rule tabulate_regions:
     input: expand(f"{AS_DIR}/{{genomes}}", genomes = GENOMES)
     params: AS_DIR
     output: f"{RESULT_DIR}/all_regions.tsv"
     shell: "python workflow/scripts/tabulate_regions.py {params} {output}"
-
-
 
 rule count_regions:
     input: expand(f"{AS_DIR}/{{genomes}}", genomes = GENOMES)
@@ -72,3 +72,23 @@ rule count_regions:
         hybrid= "--hybrid" if config["hybrid"] else ""
     output: f"{RESULT_DIR}/region_counts.tsv"
     shell: "python workflow/scripts/count_regions.py {params.asdir} {output} {params.contig} {params.hybrid}"
+
+
+## BiG-SCAPE rules
+
+rule run_bigscape:
+    input: expand(f"{AS_DIR}/{{genomes}}", genomes = GENOMES)
+    params:
+        asdir = AS_DIR,
+        outdir = BIG_DIR,
+        bigscape_command = config["bigscape_command"],
+        bigscape_flags = config['bigscape_flags']
+    output: f"{BIG_DIR}/index.html"
+    conda: config["bigscape_conda"]
+    shell: "{params.bigscape_command} -i {params.asdir} -o {params.outdir} {params.bigscape_flags}"
+
+rule tar_bigscape:
+    input: f"{BIG_DIR}/index.html"
+    params: BIG_DIR
+    output: f"{BIG_DIR}.tar.gz"
+    shell: "tar --exclude 'cache' -zcf {output} -C {params} ."
