@@ -11,7 +11,7 @@ import argparse
 
 def parse_json(path):
     result_list = []
-    with open(path, 'r') as f:
+    with open(str(path), 'r') as f:
         data = json.load(f)
     for record in data["records"]:
         if not record["areas"]:

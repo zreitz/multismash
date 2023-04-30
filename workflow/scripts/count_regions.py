@@ -10,7 +10,7 @@ import argparse
 
 def parse_json(path):
     by_contig = {}
-    with open(path, 'r') as f:
+    with open(str(path), 'r') as f:
         data = json.load(f)
     for record in data["records"]:
         products = [a["products"] for a in record["areas"]]
