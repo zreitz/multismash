@@ -1,13 +1,12 @@
 ## Given a bunch of antismash results, tabulate BGC regions
 ## Usage:
-##      python tabulate_regions.py path/to/results_dir/ regions.tsv
-## Where results_dir contains antismash result directories
+##      python tabulate_regions.py -h
 
 import csv
 from pathlib import Path
 import re
 import json
-from sys import argv
+import argparse
 
 
 def parse_json(path):
@@ -18,7 +17,7 @@ def parse_json(path):
         if not record["areas"]:
             continue
         regions = [feat for feat in record["features"]
-                 if feat["type"] == "region"]
+                   if feat["type"] == "region"]
         for region in regions:
             start, end = re.findall(r'\d+', region["location"])
             region_dict = {
@@ -52,4 +51,13 @@ def main(asdir, outpath):
 
 
 if __name__ == "__main__":
-    main(argv[1], argv[2])
+    parser = argparse.ArgumentParser(description="Given a bunch of antismash results, tabulate BGC regions")
+
+    parser.add_argument("asdir", type=str,
+                        help="directory containing antiSMASH directories")
+    parser.add_argument("outpath", type=str,
+                        help="desired path+name for the output TSV")
+
+    args = parser.parse_args()
+
+    main(args.asdir, args.outpath)
