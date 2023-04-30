@@ -1,4 +1,6 @@
 .snakemake
 .idea
 
-results
+results/**
+!results/example/
+!results/example/**

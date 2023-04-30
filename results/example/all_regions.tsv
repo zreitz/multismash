@@ -1,0 +1,24 @@
+file	record_id	region	start	end	contig_edge	product	record_desc
+GCF_000005845.2_ASM584v2_genomic	NC_000913	1	594156	649297	False	NRP-metallophore / NRPS	Escherichia coli str. K-12 substr. MG1655, complete genome
+GCF_000005845.2_ASM584v2_genomic	NC_000913	2	940339	966632	False	thiopeptide	Escherichia coli str. K-12 substr. MG1655, complete genome
+GCF_000009045.1_ASM904v1_genomic	NC_000964	1	204174	226248	False	ranthipeptide / sactipeptide	Bacillus subtilis subsp. subtilis str. 168 complete genome
+GCF_000009045.1_ASM904v1_genomic	NC_000964	2	358302	421744	False	NRPS	Bacillus subtilis subsp. subtilis str. 168 complete genome
+GCF_000009045.1_ASM904v1_genomic	NC_000964	3	1149957	1170476	False	terpene	Bacillus subtilis subsp. subtilis str. 168 complete genome
+GCF_000009045.1_ASM904v1_genomic	NC_000964	4	1763762	1869009	False	transAT-PKS / PKS-like / T3PKS / NRPS	Bacillus subtilis subsp. subtilis str. 168 complete genome
+GCF_000009045.1_ASM904v1_genomic	NC_000964	5	1940624	2017738	False	NRPS / betalactone	Bacillus subtilis subsp. subtilis str. 168 complete genome
+GCF_000009045.1_ASM904v1_genomic	NC_000964	6	2092167	2114066	False	terpene	Bacillus subtilis subsp. subtilis str. 168 complete genome
+GCF_000009045.1_ASM904v1_genomic	NC_000964	7	2259520	2279691	False	glycocin	Bacillus subtilis subsp. subtilis str. 168 complete genome
+GCF_000009045.1_ASM904v1_genomic	NC_000964	8	2296955	2338053	False	T3PKS	Bacillus subtilis subsp. subtilis str. 168 complete genome
+GCF_000009045.1_ASM904v1_genomic	NC_000964	9	3260518	3312296	False	NRP-metallophore / NRPS	Bacillus subtilis subsp. subtilis str. 168 complete genome
+GCF_000009045.1_ASM904v1_genomic	NC_000964	10	3593820	3614567	False	CDPS	Bacillus subtilis subsp. subtilis str. 168 complete genome
+GCF_000009045.1_ASM904v1_genomic	NC_000964	11	3826057	3847669	False	sactipeptide	Bacillus subtilis subsp. subtilis str. 168 complete genome
+GCF_000009045.1_ASM904v1_genomic	NC_000964	12	3850667	3892086	False	other	Bacillus subtilis subsp. subtilis str. 168 complete genome
+GCF_000009045.1_ASM904v1_genomic	NC_000964	13	4088149	4108419	False	RRE-containing	Bacillus subtilis subsp. subtilis str. 168 complete genome
+GCF_000009045.1_ASM904v1_genomic	NC_000964	14	4115741	4137440	False	epipeptide	Bacillus subtilis subsp. subtilis str. 168 complete genome
+GCF_000013425.1_ASM1342v1_genomic	NC_007795	1	77515	93234	False	NI-siderophore	Staphylococcus aureus subsp. aureus NCTC 8325 chromosome, complete genome
+GCF_000013425.1_ASM1342v1_genomic	NC_007795	2	129044	176220	False	NRPS	Staphylococcus aureus subsp. aureus NCTC 8325 chromosome, complete genome
+GCF_000013425.1_ASM1342v1_genomic	NC_007795	3	1843449	1867680	False	lanthipeptide-class-i	Staphylococcus aureus subsp. aureus NCTC 8325 chromosome, complete genome
+GCF_000013425.1_ASM1342v1_genomic	NC_007795	4	2083873	2104580	False	cyclic-lactone-autoinducer	Staphylococcus aureus subsp. aureus NCTC 8325 chromosome, complete genome
+GCF_000013425.1_ASM1342v1_genomic	NC_007795	5	2253965	2268981	False	NI-siderophore	Staphylococcus aureus subsp. aureus NCTC 8325 chromosome, complete genome
+GCF_000013425.1_ASM1342v1_genomic	NC_007795	6	2534597	2556710	False	opine-like-metallophore	Staphylococcus aureus subsp. aureus NCTC 8325 chromosome, complete genome
+GCF_000013425.1_ASM1342v1_genomic	NC_007795	7	2611567	2663150	False	T3PKS / terpene	Staphylococcus aureus subsp. aureus NCTC 8325 chromosome, complete genome

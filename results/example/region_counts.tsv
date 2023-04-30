@@ -1,0 +1,4 @@
+record	total_count	CDPS	NI-siderophore	NRP-metallophore	NRPS	PKS-like	RRE-containing	T3PKS	betalactone	cyclic-lactone-autoinducer	epipeptide	glycocin	lanthipeptide-class-i	opine-like-metallophore	other	ranthipeptide	sactipeptide	terpene	thiopeptide	transAT-PKS
+GCF_000005845.2_ASM584v2_genomic.gbff	2	0	0	1	1	0	0	0	0	0	0	0	0	0	0	0	0	0	1	0
+GCF_000009045.1_ASM904v1_genomic.gbff	14	1	0	1	4	1	1	2	1	0	1	1	0	0	1	1	2	2	0	1
+GCF_000013425.1_ASM1342v1_genomic.gbff	7	0	2	0	1	0	0	1	0	1	0	0	1	1	0	0	0	1	0	0
