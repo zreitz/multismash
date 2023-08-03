@@ -6,7 +6,7 @@ This pipeline runs antiSMASH on a directory of genome files, tabulates the resul
 
 The workflow is in [workflow/Snakefile](workflow/Snakefile), and relies on information provided in a configuration file, see [config/config.yaml](config/config.yaml) for an example.
 
-The workflow can be run from the command line with something like:
+After installing snakemake and antiSMASH, and editing the configfile, the workflow can be run from the command line with something like:
 
 `snakemake --cores 1 --use-conda --configfile config/config.yaml`
 
