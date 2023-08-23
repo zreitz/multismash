@@ -1,4 +1,6 @@
 # multiSMASH: A workflow and scripts for large-scale antiSMASH analyses
+[![DOI](https://zenodo.org/badge/633863055.svg)](https://zenodo.org/badge/latestdoi/633863055)
+
 
 ## Snakemake pipeline
 
