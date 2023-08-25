@@ -1,6 +1,7 @@
 #### REQUIRED VALUES ####
 
-## What is the name of the job? Results will be stored in `results/job_prefix/`
+## What is the name of the job? Results will be stored in `results_dir/job_prefix/`
+results_dir: "results"    # This can also be an absolute path
 job_prefix: "test"
 
 # Parent directory for the input data, which can be genomes or antismash folders
