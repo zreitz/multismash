@@ -32,15 +32,22 @@ if not GENOMES:
 ## Result locations
 BIG_DIR = f"{RESULT_DIR}/bigscape"
 
-
-rule all:
-    input:
+def get_inputs_for_all(wildcards):
+    inputs = [
         # tabulate_regions
         f"{RESULT_DIR}/all_regions.tsv",
         # count_regions
-        f"{RESULT_DIR}/region_counts.tsv",
-        # bigscape
-        f"{BIG_DIR}.tar.gz"
+        f"{RESULT_DIR}/region_counts.tsv"
+    ]
+    # bigscape
+    if config["run_bigscape"]:
+        inputs.append(f"{BIG_DIR}.tar.gz")
+    return inputs
+
+
+rule all:
+    input:
+        get_inputs_for_all
 
 
 #### AntiSMASH rules ####
@@ -76,19 +83,20 @@ rule count_regions:
 
 ## BiG-SCAPE rules
 
-rule run_bigscape:
-    input: expand(f"{AS_DIR}/{{genomes}}", genomes = GENOMES)
-    params:
-        asdir = AS_DIR,
-        outdir = BIG_DIR,
-        bigscape_command = config["bigscape_command"],
-        bigscape_flags = config['bigscape_flags']
-    output: f"{BIG_DIR}/index.html"
-    conda: config["bigscape_conda"]
-    shell: "{params.bigscape_command} -i {params.asdir} -o {params.outdir} {params.bigscape_flags}"
+if config["run_bigscape"]:
+    rule run_bigscape:
+        input: expand(f"{AS_DIR}/{{genomes}}", genomes = GENOMES)
+        params:
+            asdir = AS_DIR,
+            outdir = BIG_DIR,
+            bigscape_command = config["bigscape_command"],
+            bigscape_flags = config['bigscape_flags']
+        output: f"{BIG_DIR}/index.html"
+        conda: config["bigscape_conda"]
+        shell: "{params.bigscape_command} -i {params.asdir} -o {params.outdir} {params.bigscape_flags}"
 
-rule tar_bigscape:
-    input: f"{BIG_DIR}/index.html"
-    params: BIG_DIR
-    output: f"{BIG_DIR}.tar.gz"
-    shell: "tar --exclude 'cache' -zcf {output} -C {params} ."
+    rule tar_bigscape:
+        input: f"{BIG_DIR}/index.html"
+        params: BIG_DIR
+        output: f"{BIG_DIR}.tar.gz"
+        shell: "tar --exclude 'cache' -zcf {output} -C {params} ."

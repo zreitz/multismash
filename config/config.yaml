@@ -31,6 +31,8 @@ contig: False
 hybrid: False
 
 ## BiG-SCAPE configuration
+run_bigscape: True
+
 # BiG-SCAPE is likewise not conda installable
 bigscape_command: "bigscape.py"
 bigscape_conda: "bigscape"
