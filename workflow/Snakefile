@@ -8,10 +8,12 @@ try:
 except KeyError as e:
     print("Error finding a job prefix. Did you use a --configfile?")
     raise e
-RESULT_DIR = f"{config['results_dir']}/{JOB_PREFIX}"
+
+# expanduser allows ~
+RESULT_DIR = os.path.expanduser(f"{config['results_dir']}/{JOB_PREFIX}")
 
 # Gather input files
-DATA_DIR = os.path.expanduser(config["data_dir"]) # expanduser allows ~
+DATA_DIR = os.path.expanduser(config["data_dir"])
 DATA_EXT = config["data_ext"]
 
 # antismash results as input
