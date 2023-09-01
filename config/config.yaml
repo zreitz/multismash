@@ -1,5 +1,8 @@
 #### REQUIRED VALUES ####
 
+## Cores to use in parallel
+cores:
+
 ## What is the name of the job? Results will be stored in `results_dir/job_prefix/`
 results_dir: "results"    # This can also be an absolute path
 job_prefix: "test"

@@ -1,5 +1,6 @@
 .snakemake
 .idea
+multismash/multiSMASH.egg-info
 
 results/**
 !results/example/
