@@ -10,6 +10,7 @@ data_dir: "example"
 ## File extension to be used
 # Use `gbff`, `gbk`, `fna`, etc for genomes that will be run through antismash
 # Leave blank for existing antismash results
+# If you want to use `--rerun-results`, then use `data_ext: json` and set the `antismash_reuse_results` flag below
 data_ext: gbff
 
 # For fasta files, GFF3 gene features can be provided separately. Files must
@@ -22,7 +23,9 @@ gff3_ext: null  # gff
 #   installation.
 antismash_command: "antismash" # or maybe `python /path/to/run_antismash.py`
 antismash_conda: "antismash7"
-antismash_flags: "--genefinding-tool none --minimal"
+
+antismash_flags: "--genefinding-tool none --minimal" # In addition to SEQUENCE, --output-dir, and -c
+antismash_reuse_results: False
 
 ## count_regions configuration
 # Should regions be counted by individual contigs rather than genome?

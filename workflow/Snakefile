@@ -62,10 +62,10 @@ rule run_antismash:
     params:
         antismash = config["antismash_command"],
         antismash_flags = config["antismash_flags"],
+        reuse = "--reuse-results" if config["antismash_reuse_results"] else ""
     output: directory(f"{AS_DIR}/{{GENOMES}}")
     conda: config["antismash_conda"]
-    shell: "{params.antismash} {input.genomes} --output-dir {output} "
-                "-c 1 {params.antismash_flags} || mkdir -p {output}"
+    shell: "{params.antismash} --output-dir {output} -c 1 {params.antismash_flags} {params.reuse} {input.genomes} || mkdir -p {output}"
 
 rule tabulate_regions:
     input: expand(f"{AS_DIR}/{{genomes}}", genomes = GENOMES)

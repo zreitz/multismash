@@ -27,7 +27,7 @@ After downloading this repo and installing antiSMASH and Snakemake(-minimal), yo
 
 `snakemake --cores 1 --use-conda --configfile config/config.yaml`
 
-After the pipeline runs, the results will be located in `results/test` (as specificied in the configfile).
+After the pipeline runs, the results will be located in `results/test` (as specified in the configfile).
 
 Each genome will be analyzed by antiSMASH using a single core. Setting multiple cores allows for parallel analyses (this is way faster in my experience than giving a single antiSMASH run multiple cores). 
 
