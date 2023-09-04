@@ -1,0 +1,81 @@
+#------------------------<  Set these for every job  >------------------------#
+
+# Cores to use in parallel
+cores: 3
+
+# Input directory containing the data
+in_dir: genbanks                  # Relative paths are relative to THIS file!
+
+# Input file extension
+in_ext: gbff.gz                   # Leave blank for antiSMASH result folders
+
+# Output directory to store the results
+out_dir: ../example_output        # Paths can also be absolute
+
+# Desired analyses - antiSMASH will always be run unless existing results are given
+run_tabulation: True
+run_bigscape: False
+
+
+#------------<  Set these if the defaults don't match your needs  >------------#
+
+# Flags for Snakemake are set on the command line, but you can also set them here.
+snakemake_flags:
+## The following flags are set by multiSMASH and cannot be used directly:
+#     --snakefile --cores --use-conda --configfile --conda-prefix
+
+
+#####  run_antismash  #####
+
+antismash_flags:
+  --genefinding-tool none           
+  --minimal
+  ## [sequence], [--output-dir], and [--cpus] are set automatically
+
+# Are you using the --reuse-results flag? (Only for antiSMASH JSON inputs)
+antismash_reuse_results: False
+
+
+#####  run_tabulation  #####
+
+# Should regions be counted per each individual contig rather than per assembly?
+count_per_contig: False
+
+# Should hybrids be counted separately for BGC class they contain,
+#     rather than once as a separate "hybrid" BGC class?
+# Caution: [True] artificially inflates total BGC counts
+split_hybrids: False
+
+
+#####  run_bigscape  #####
+
+bigscape_flags:
+  # --mibig
+  --mix
+  --no_classify 
+  --include_singletons 
+  --clans-off 
+  --cutoffs 0.5
+  ## [--inputdir], [--outputdir], [--pfam-dir] and [--cores] are set automatically
+
+# Should the final BiG-SCAPE results be compressed?
+zip_bigscape: True
+
+
+
+#-----------<  Set these if you have a non-standard installation  >-----------#
+
+## Only set this if antiSMASH is in a different environment from multiSMASH
+antismash_conda_env_name:
+antismash_command: antismash       # Or maybe `python /path/to/run_antismash.py`
+
+# By default, a new BiG-SCAPE conda environment is automatically installed
+#   the first time multiSMASH is run with the flag [run_bigscape: True].
+#   If you already have a BiG-SCAPE environment that you want to use,
+#   put the environment name here.
+bigscape_conda_env_name:
+bigscape_command:                 # Maybe python /path/to/bigscape/bigscape.py
+# BiG-SCAPE also requires a hmmpress'd Pfam database (Pfam-A.hmm plus .h3* files).
+#     It will be downloaded automatically (in /path/to/multismash/pfam),
+#     or if they already exist, you can specify the parent directory here.
+pfam_dir:                         # Relative paths are relative to THIS file!

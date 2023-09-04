@@ -1,0 +1,67 @@
+$schema: http://json-schema.org/draft-07/schema#
+
+description: multismash configuration file
+properties:
+  cores:
+    type: integer
+    minimum: 1
+  in_dir:
+    type: string
+  in_ext:
+    type: [string, "null"]
+  out_dir:
+    type: string
+
+  run_tabulation:
+    type: boolean
+  run_bigscape:
+    type: boolean
+
+  snakemake_flags:
+    type: [string, "null"]
+
+  antismash_flags:
+    type: [string, "null"]
+  antismash_reuse_results:
+    type: boolean
+
+  count_per_contig:
+    type: boolean
+  split_hybrids:
+    type: boolean
+
+  bigscape_flags:
+    type: [string, "null"]
+  zip_bigscape:
+    type: boolean
+
+  antismash_conda_env_name:
+    type: [string, "null"]
+  antismash_command:
+    type: string
+
+  bigscape_conda_env_name:
+    type: [string, "null"]
+  bigscape_command:
+    type: [ string, "null" ]
+  pfam_dir:
+    type: [ string, "null" ]
+
+required:
+  - cores
+  - in_dir
+  - out_dir
+
+  - run_tabulation
+  - run_bigscape
+
+  - antismash_reuse_results
+
+  - count_per_contig
+  - split_hybrids
+
+  - zip_bigscape
+
+  - antismash_command
+
+additionalProperties: false
