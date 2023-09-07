@@ -24,8 +24,10 @@ rule run_antismash:
         directory(f"{paths['AS_DIR']}/{{GENOMES}}"),
         f"{paths['AS_DIR']}/{{GENOMES}}/{{GENOMES}}.gbk"  # Ensure the run finishes
     conda: config["antismash_conda_env_name"]
+    log: paths['LOG_DIR'] / f"{{GENOMES}}.log"
     shell: "{params.antismash} --output-dir {params.output_dir} -c 1 "
-                "{params.antismash_flags} {params.reuse} {input.genomes}"
+                "{params.antismash_flags} {params.reuse} {input.genomes} "
+                "--logfile {log}"
 
 rule tabulate_regions:
     input: expand(f"{paths['AS_DIR']}/{{genomes}}/{{genomes}}.gbk", genomes = GENOMES)

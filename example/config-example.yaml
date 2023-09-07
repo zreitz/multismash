@@ -30,7 +30,7 @@ snakemake_flags:
 antismash_flags:
   --genefinding-tool none           
   --minimal
-  ## [sequence], [--output-dir], and [--cpus] are set automatically
+  ## sequence, --output-dir, --cpus, and --logfile are set automatically
 
 # Are you using the --reuse-results flag? (Only for antiSMASH JSON inputs)
 antismash_reuse_results: False

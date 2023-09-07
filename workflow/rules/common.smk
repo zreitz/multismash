@@ -1,5 +1,5 @@
 from pathlib import Path
-
+from datetime import datetime
 
 def build_paths():
     paths = {}
@@ -28,6 +28,8 @@ def build_paths():
     else:
         paths["PFAM_DIR"] = Path(workflow.basedir).parent / "pfam"
 
+    # Timestamped directory for logging
+    paths["LOG_DIR"] = paths["OUT_DIR"] / "log" / datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     return paths
 
 

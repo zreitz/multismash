@@ -158,12 +158,12 @@ mamba create -n antismash7 python=3.10
 mamba activate antismash7
 
 # Install dependencies
-mamba install hmmer2 hmmer diamond fasttree prodigal glimmerhmm   # Not meme!
+mamba install -c bioconda hmmer2 hmmer diamond fasttree prodigal glimmerhmm   # Not meme!
 
 # Download and install antiSMASH
 git clone --branch 7-0-stable https://github.com/antismash/antismash.git antismash7
 cd antismash7
-pip install .
+pip install -e .
 ```
 
 Note that Python must be 3.9+.
@@ -173,20 +173,22 @@ The reason antiSMASH 7 is not one-line conda installable is that it
 requires `meme<=4.11.2`, which doesn't play well with others. 
 
 You will have to install the old version of meme suite separately and direct
- antiSMASH to the binaries for `meme` and `fimo`. Options include:
-- Use the binaries from a working antiSMASH 6 conda environment
-- Create a separate conda environment just for the old meme version with   
-`mamba create --name meme_4.11.2 meme=4.11.2`
+ antiSMASH to the binaries for `meme` and `fimo`. 
 
-Get the path to the binaries themselves (try `which meme; which fimo` 
-from inside the meme-containing environment). You'll get something like:   
-`/Users/zach/mambaforge/envs/meme_4.11.2/bin/meme`
-
-Permanently tell antiSMASH where to find them with a config file:
+You can create a separate conda environment just for the old meme version,
+then tell antiSMASH permanently where to find the binaries using the antiSMASH
+config file:
 ```bash
-echo "executable-paths meme=/path/to/meme,fimo=/path/to/fimo" >> ~/.antismash7.cfg
-```
+# If you have a working antSMASH v6 environment, just activate that instead
+mamba create --name meme_4.11.2 -c bioconda meme=4.11.2
+mamba activate meme_4.11.2
 
+# Permanently tell antiSMASH v7 where to find the executables
+echo "executable-paths meme=$(which meme),fimo=$(which fimo)" >> ~/.antismash7.cfg
+
+# Return to antismash environment
+mamba activate antismash7
+```
 
 Finally, download the various databases that antiSMASH requires:
 ```bash
