@@ -7,7 +7,7 @@ cores: 3
 in_dir: genbanks                  # Relative paths are relative to THIS file!
 
 # Input file extension
-in_ext: gbff                   # Leave blank for antiSMASH result folders
+in_ext: gbff.gz                   # Leave blank for antiSMASH result folders
 
 # Output directory to store the results
 out_dir: ../example_output        # Paths can also be absolute

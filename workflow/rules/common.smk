@@ -20,7 +20,7 @@ def build_paths():
     paths["TABULATE"] = Path(workflow.basedir) / "scripts" / "tabulate_regions.py"
 
     # Out directory for bigscape
-    paths["BIG_DIR"] = paths["OUT_DIR"] / "conda" / "bigscape"
+    paths["BIG_DIR"] = paths["OUT_DIR"] / "bigscape"
     # Pfam directory for bigscape
     pfam = config["pfam_dir"]
     if pfam:
@@ -56,19 +56,19 @@ def get_samples(paths):
 
 def get_bigscape_env():
     env = config["bigscape_conda_env_name"]
+    # An environment was created
     if not env:
         env = "envs/bigscape.yaml"
 
     command = config["bigscape_command"]
     if not command:
-        command = Path(workflow.basedir).parent / "BiG-SCAPE-1.1.5" / "bigscape.py"
+        command = Path(workflow.basedir).parent / "conda" / "BiG-SCAPE-1.1.5" / "bigscape.py"
         command = f"python {command}"
     return env, command
 
 
 def get_inputs_for_all(paths):
     out_dir = paths["OUT_DIR"]
-    big_dir = paths["BIG_DIR"]
     inputs = []
     if config["run_tabulation"]:
         inputs.extend((
@@ -79,7 +79,7 @@ def get_inputs_for_all(paths):
         ))
     # bigscape
     if config["run_bigscape"]:
-        big_dir = out_dir / "bigscape"
+        big_dir = paths["BIG_DIR"]
         if config["zip_bigscape"]:
             inputs.append(f"{big_dir}.tar.gz")
         else:
