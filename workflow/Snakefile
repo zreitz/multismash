@@ -1,9 +1,15 @@
+import shutil
+
 include: "rules/common.smk"
 
 paths = build_paths()
 GENOMES = get_samples(paths)
 
 BIG_ENV, BIG_COMMAND = get_bigscape_env()
+
+# Copy the config file into the log directory
+paths["LOG_DIR"].mkdir(parents=True)
+shutil.copy(workflow.configfiles[0], paths["LOG_DIR"] / "input_config.yaml")
 
 rule all:
     input:
@@ -18,15 +24,16 @@ rule run_antismash:
         antismash = config["antismash_command"],
         antismash_flags = config["antismash_flags"],
         reuse = "--reuse-results" if config["antismash_reuse_results"] else "",
-        fail_log = paths['LOG_DIR'] / "_errors.log",
+        fail_log = paths['LOG_DIR'] / "antismash_errors.log",
         accept_failure = config['antismash_accept_failure']
     output:
         out_dir = directory(f"{paths['AS_DIR']}/{{GENOMES}}"),
         out_gbk = f"{paths['AS_DIR']}/{{GENOMES}}/{{GENOMES}}.gbk"  # Ensure the run finishes
     conda: config["antismash_conda_env_name"]
-    log: paths['LOG_DIR'] / f"{{GENOMES}}.aS.log"
+    log: paths['LOG_DIR'] / "antismash" / f"{{GENOMES}}.log"
     shell:
         """
+        touch {params.fail_log}
         function prepend() {{ while read line; do echo "${{1}}${{line}}"; done; }}
         if {{ asout=$({params.antismash} --output-dir {output.out_dir} -c 1 \
                 {params.antismash_flags} {params.reuse} {input.genomes} \

@@ -115,7 +115,7 @@ output of each antiSMASH job so errors can be investigated.
 
 ### Error handling: what happens if individual antiSMASH jobs fail
 The logs for each antiSMASH run are stored within the output directory in 
- `log/<timestamp>`. Any errors are stored in `log/<timestamp>/_errors.log`.
+ `log/<timestamp>/antismash`. Any errors are stored in `log/<timestamp>/antismash_errors.log`.
 
 By default, multiSMASH runs snakemake with the `--keep-going (-k)` flag, which means that
 if any job fails, non-dependent jobs will continue to be run. After every 
@@ -128,8 +128,8 @@ To have multiSMASH exit on the first job failure, remove `--keep-going` \
 To have multiSMASH run tabulation and/or BiG-SCAPE even after job failure(s),
 set the configuration `antismash_accept_failure: True`. **Note: An empty 
 `<genome>/<genome>.gbk` file will be created.** A record of failed jobs 
-will appear in the `_errors.log` file, but those genomes will not appear in the
-tabulation.
+will appear in the `antismash_errors.log` file, but those genomes will not appear 
+in the tabulated outputs.
 
 ## Standalone scripts
 
