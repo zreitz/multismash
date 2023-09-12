@@ -215,6 +215,10 @@ Finally, download the various databases that antiSMASH requires:
 ```bash
 download-antismash-databases
 ```
+OR if they're already downloaded, tell antiSMASH where to find them:
+```bash
+echo "databases /path/to/antismash-databases" >> ~/.antismash7.cfg
+```
 
 Test your installation:
 ```bash
