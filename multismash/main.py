@@ -73,11 +73,15 @@ def install_bigscape(configs):
 def main():
     args, snakemake_args = parse_args()
 
+    # Catch problematic flags
     forbidden = {"--snakefile", "--cores", "--use-conda", "--configfile", "--conda-prefix"}
     forbidden = forbidden.intersection(set(snakemake_args))
     if forbidden:
         raise SystemExit(f"Error: multiSMASH automatically sets the following flag"
                          f"{'s' if len(forbidden) > 1 else ''}: {' '.join(forbidden)}")
+    if "--reuse-results" in snakemake_args:
+        raise SystemExit(f"Error: instead of using --reuse-results, set the "
+                         "antismash_reuse_results flag to be True")
 
     with open(args.configfile) as yml:
         configs = yaml.safe_load(yml)
@@ -107,6 +111,8 @@ def main():
     if configs["snakemake_flags"]:
         args.append(configs["snakemake_flags"])
     args.extend(snakemake_args)
+
+    print(f"Running multiSMASH with {configs['cores']} cores")
     subprocess.run(args)
 
 

@@ -24,6 +24,8 @@ properties:
     type: [string, "null"]
   antismash_reuse_results:
     type: boolean
+  antismash_accept_failure:
+    type: boolean
 
   count_per_contig:
     type: boolean
@@ -55,6 +57,7 @@ required:
   - run_tabulation
   - run_bigscape
 
+  - antismash_accept_failure
   - antismash_reuse_results
 
   - count_per_contig

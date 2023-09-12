@@ -7,32 +7,39 @@ cores: 3
 in_dir: genbanks                  # Relative paths are relative to THIS file!
 
 # Input file extension
-in_ext: gbff.gz                   # Leave blank for antiSMASH result folders
+in_ext: gbff                   # Leave blank for antiSMASH result folders
 
 # Output directory to store the results
 out_dir: ../example_output        # Paths can also be absolute
 
 # Desired analyses - antiSMASH will always be run unless existing results are given
 run_tabulation: True
-run_bigscape: False
+run_bigscape: True
 
 
 #------------<  Set these if the defaults don't match your needs  >------------#
 
 # Flags for Snakemake are set on the command line, but you can also set them here.
 snakemake_flags:
+  --keep-going              # Go on with independent jobs if a job fails
+
+
 ## The following flags are set by multiSMASH and cannot be used directly:
 #     --snakefile --cores --use-conda --configfile --conda-prefix
 
 
 #####  run_antismash  #####
 
+## sequence, --output-dir, --cpus, and --logfile are set automatically
 antismash_flags:
-  --genefinding-tool none           
   --minimal
-  ## sequence, --output-dir, --cpus, and --logfile are set automatically
+  #--genefinding-tool none
+  #--no-abort-on-invalid-records
 
-# Are you using the --reuse-results flag? (Only for antiSMASH JSON inputs)
+
+# Should downstream steps (tabulation and/or BiG-SCAPE) run if jobs fail?
+antismash_accept_failure: False
+# Should multiSMASH set the --reuse-results flag? (for antiSMASH JSON inputs)
 antismash_reuse_results: False
 
 

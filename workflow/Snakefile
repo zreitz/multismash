@@ -10,7 +10,6 @@ rule all:
         get_inputs_for_all(paths)
 
 
-# TODO: give logging on failed runs - check if a dir is empty after this
 # TODO: gff support
 rule run_antismash:
     input:
@@ -18,16 +17,33 @@ rule run_antismash:
     params:
         antismash = config["antismash_command"],
         antismash_flags = config["antismash_flags"],
-        output_dir = f"{paths['AS_DIR']}/{{GENOMES}}",
-        reuse = "--reuse-results" if config["antismash_reuse_results"] else ""
+        reuse = "--reuse-results" if config["antismash_reuse_results"] else "",
+        fail_log = paths['LOG_DIR'] / "_errors.log",
+        accept_failure = config['antismash_accept_failure']
     output:
-        directory(f"{paths['AS_DIR']}/{{GENOMES}}"),
-        f"{paths['AS_DIR']}/{{GENOMES}}/{{GENOMES}}.gbk"  # Ensure the run finishes
+        out_dir = directory(f"{paths['AS_DIR']}/{{GENOMES}}"),
+        out_gbk = f"{paths['AS_DIR']}/{{GENOMES}}/{{GENOMES}}.gbk"  # Ensure the run finishes
     conda: config["antismash_conda_env_name"]
-    log: paths['LOG_DIR'] / f"{{GENOMES}}.log"
-    shell: "{params.antismash} --output-dir {params.output_dir} -c 1 "
-                "{params.antismash_flags} {params.reuse} {input.genomes} "
-                "--logfile {log}"
+    log: paths['LOG_DIR'] / f"{{GENOMES}}.aS.log"
+    shell:
+        """
+        function prepend() {{ while read line; do echo "${{1}}${{line}}"; done; }}
+        if {{ asout=$({params.antismash} --output-dir {output.out_dir} -c 1 \
+                {params.antismash_flags} {params.reuse} {input.genomes} \
+                --logfile {log} 2>&1 \
+                | prepend "{wildcards.GENOMES}\t" \
+                | tee /dev/fd/3 | \
+                sed -n 's/.*ERROR//p'); }} 3>&1
+        then
+            :
+        else
+            echo "{wildcards.GENOMES}\t{input.genomes}\t$asout" >> {params.fail_log}
+            if {params.accept_failure}; then
+                mkdir -p {output.out_dir}
+                touch {output.out_gbk}
+            fi
+        fi
+        """
 
 rule tabulate_regions:
     input: expand(f"{paths['AS_DIR']}/{{genomes}}/{{genomes}}.gbk", genomes = GENOMES)
