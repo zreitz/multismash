@@ -1,72 +1,144 @@
 # multiSMASH: A workflow and scripts for large-scale antiSMASH analyses
 [![DOI](https://zenodo.org/badge/633863055.svg)](https://zenodo.org/badge/latestdoi/633863055)
 
-This pipeline runs antiSMASH on a directory of genome files, tabulates the results, and runs BiG-SCAPE clustering. 
+multiSMASH is a Snakemake-based [antiSMASH](https://antismash.secondarymetabolites.org/#!/start) 
+wrapper that streamlines large-scale analyses of biosynthetic gene clusters (BGCs) 
+across multiple genomes.
+
+The pipeline can:
+1. Parallelize antiSMASH runs on user-supplied genomes (OR accept existing results)
+2. Summarize and tabulate the antiSMASH results 
+   with [information on each region](#tabulateregionspy) 
+   and [per-genome BGC counts](#countregionspy)
+3. Run [BiG-SCAPE](https://github.com/medema-group/BiG-SCAPE/wiki) on the 
+   resulting BGCs to visualize gene cluster families (GCFs).
 
 ## Installation
 
-Download and enter this repository:
+### Recommended: Installing multiSMASH inside an antiSMASH conda environment
+
+*For help installing antiSMASH, see my [antiSMASH 7 installation protocol](#antiSMASH-7-installation-protocol) 
+below or [the official antiSMASH documentation](https://docs.antismash.secondarymetabolites.org/install/).*
+
+Activate the antiSMASH environment:
+```bash
+conda activate antismash7
 ```
+Download this repository and enter it, then install the package with pip:
+```bash
 git clone https://github.com/zreitz/multismash.git
 cd multismash
+pip install -e .
 ```
 
-If you only want to use the [standalone scripts](#standalone-scripts) to tabulate existing antiSMASH runs, you're probably done! Those scripts have no dependencies outside [Python 3.6+](https://www.python.org/downloads/) and the standard Python library.
+`multismash` should now be added to your path and ready to use from any directory:
+```bash
+$ multismash -h
+usage: multismash [-h] configfile [--cores CORES] [...]
 
-The pipeline itself requires `snakemake` or `snakemake-minimal`. See their [documentation](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) for installation instructions.
+multiSMASH is a Snakemake-based antiSMASH wrapper that streamlines 
+large-scale analyses of BGCs across multiple genomes.
 
-If you want to run antiSMASH, then you'll require a local version of antiSMASH. See their [documentation](https://docs.antismash.secondarymetabolites.org/install/) for installation instructions. 
-I use antiSMASH in a separate conda environment, and the workflow will need some minor adjustments for other installations such as Docker. If you're interested in those adjustments (and helping me make/test them), please let me know!
+positional arguments:
+  configfile  path to the YAML file with job configurations
 
-Installing BiG-SCAPE for BGC clustering is optional ([their installation instructions](https://github.com/medema-group/BiG-SCAPE/wiki/installation)). Again, the pipeline currently expects a conda installation.
+options:
+  -h, --help  show this help message and exit
 
+Any additional arguments will be passed to Snakemake. Use `snakemake -h`
+to see all available parameters. Flags you may find useful:
+  --dry-run, -n   Do not execute anything, and display what would be done
+  --quiet, -q     Do not output any progress or rule information
+  --forceall, -F  Force the (re-)execution of all rules 
+```
 
-## Snakemake pipeline
+### Other installation notes
+* If you are only using the [standalone scripts](#standalone-scripts) for 
+  tabulating existing antiSMASH runs, then no dependencies are needed beyond
+  `python>=3.7` and the standard library. Simply download them from this repository.
+* If you want to install multiSMASH in its own conda environment, you can do so,
+  otherwise following installation instructions above. You will have to adjust the
+  `antismash_conda_env_name` and `antismash_command` parameters in the config file.
+* **BiG-SCAPE** is turned off by default. The first time a BiG-SCAPE job is 
+  requested (`run_bigscape: True` in the config file) then multiSMASH will 
+  automatically install `bigscape=1.1.5` and download the latest Pfam database.
+  If you want to use your own [BiG-SCAPE conda installation](https://github.com/medema-group/BiG-SCAPE/wiki/installation), 
+  point multiSMASH to the correct locations with the last three parameters
+  of the config file.
+* **Docker:** Snakemake [supports containerization](https://snakemake.readthedocs.io/en/stable/snakefiles/deployment.html#containerization-of-conda-based-workflows),
+  and therefore multiSMASH should be able to. However, I've never used docker/singularity. 
+  If you want to help add/test singularity support, then
+  please submit an issue with your scenario (or even better, submit a pull request).
 
-After downloading this repo and installing antiSMASH and Snakemake(-minimal), you can test your installation with the provided [example](example) Genbank files. The workflow relies on a configuration file. The example genomes can be run using [config/config.yaml](config/config.yaml).
+## Usage
 
-`snakemake --cores 1 --use-conda --configfile config/config.yaml`
+### An example workflow
+Inputs, outputs, and all other flags are set in a job-specific configuration file. 
+A working example is provided in [example/config-example.yaml](example/config-example.yaml), 
+along with three *E. coli* genomes.
 
-After the pipeline runs, the results will be located in `results/test` (as specified in the configfile).
+Preview the steps that will be performed with the `-n` (aka `--dry-run`) snakemake flag:
+```text
+$ multismash example/config-example.yaml -n
 
-Each genome will be analyzed by antiSMASH using a single core. Setting multiple cores allows for parallel analyses (this is way faster in my experience than giving a single antiSMASH run multiple cores). 
+Running multiSMASH with 3 cores
+3 gbff.gz files found
+Building DAG of jobs...
+Job stats:
+job                 count
+----------------  -------
+all                     1
+count_regions           1
+run_antismash           3
+tabulate_regions        1
+total                   6
 
-`snakemake --cores 4 --use-conda --configfile config/config.yaml     # Divide and conquer`
+<snip>
 
-The tabulation scripts `count_regions.py` and `tabulate_regions.py` (see below) are run by default. If you only want to run antiSMASH, use the `--until` flag:
+This was a dry-run (flag -n). The order of jobs does not reflect the order of execution.
+```
+The three provided genomes were found, yielding three `run_antismash` jobs. Due to
+the configuration `cores: 3`, the jobs will run in parallel, each using a single 
+core. This scales far more efficiently than multithreading antiSMASH itself. Once 
+the antiSMASH runs finish, the results will be summarized with `count_regions` 
+and `tabulate_regions` ([see below](#standalone-scripts)). 
 
-`snakemake --cores 1 --use-conda --configfile config/config.yaml --until run_antismash`
+Run the analysis by omitting the `-n` flag:
+```bash
+multismash example/config-example.yaml
+```
 
-The BiG-SCAPE analysis is off by default. To enable it, set `run_bigscape: True` in the configfile, or manually set the flag from the command line (which overrides the configfile):
+The results can be found in `multismash/example_output/`, as specified by the 
+`out_dir` configuration. 
+In addition to the results themselves, the `log/` subdirectory contains the 
+output of each antiSMASH job so errors can be investigated.
 
-`snakemake --cores 1 --use-conda --configfile config/config.yaml --config run_bigscape=True`
+### Error handling: what happens if individual antiSMASH jobs fail
+The logs for each antiSMASH run are stored within the output directory in 
+ `log/<timestamp>/antismash`. Any errors are stored in `log/<timestamp>/antismash_errors.log`.
 
+By default, multiSMASH runs snakemake with the `--keep-going (-k)` flag, which means that
+if any job fails, non-dependent jobs will continue to be run. After every 
+antiSMASH run is attempted, the tabulation jobs will fail (due to missing inputs),
+and multiSMASH will exit.
+
+To have multiSMASH exit on the first job failure, remove `--keep-going` \
+  from the configuration `snakemake_flags`.
+
+To have multiSMASH run tabulation and/or BiG-SCAPE even after job failure(s),
+set the configuration `antismash_accept_failure: True`. **Note: An empty 
+`<genome>/<genome>.gbk` file will be created.** A record of failed jobs 
+will appear in the `antismash_errors.log` file, but those genomes will not appear 
+in the tabulated outputs.
 
 ## Standalone scripts
 
 The following standalone scripts are available in `workflow/scripts`:
 
-### count_regions.py
-Given a bunch of antismash results, count the BGC regions
-```
-usage: count_regions.py [-h] [--contig] [--hybrid] asdir outpath
-
-positional arguments:
-  asdir       directory containing antiSMASH directories
-  outpath     desired path+name for the output TSV
-
-options:
-  -h, --help  show this help message and exit
-  --contig    each row of the table is an individual contig rather than a genome
-  --hybrid    hybrid regions are only counted once, as 'hybrid'
-```
-
-Example output: [results/example/region_counts.tsv](results/example/region_counts.tsv)
-
 ### tabulate_regions.py
 Given a bunch of antismash results, tabulate BGC regions
 
-```
+```text
 usage: tabulate_regions.py [-h] asdir outpath
 
 positional arguments:
@@ -78,3 +150,80 @@ options:
 ```
 
 Example output: [results/example/all_regions.tsv](results/example/all_regions.tsv)
+
+### count_regions.py
+Given a bunch of antismash results, count the BGC regions
+```text
+usage: count_regions.py [-h] [--contig] [--hybrid] asdir outpath
+
+positional arguments:
+  asdir       directory containing antiSMASH directories
+  outpath     desired path+name for the output TSV
+
+options:
+  -h, --help  show this help message and exit
+  --by_contig      count regions per each individual contig rather than per assembly
+  --split_hybrids  count each hybrid region multiple times, once for each constituent 
+                   BGC class. Caution: this flag artificially inflates total BGC counts
+```
+
+Example output: [results/example/region_counts.tsv](results/example/region_counts.tsv)
+
+
+## antiSMASH 7 installation protocol
+Here's my secret recipe for an antiSMASH 7.0 conda environment that is multiSMASH-compatible.
+See [the official antiSMASH documentation](https://docs.antismash.secondarymetabolites.org/install/) 
+ for more installation options. 
+
+```bash
+# Create the environment. Conda should work too, but mamba is faster
+mamba create -n antismash7 python=3.10      # Python must be v 3.9+
+mamba activate antismash7
+
+# Install dependencies
+mamba install -c bioconda hmmer2 hmmer diamond fasttree prodigal glimmerhmm
+
+# Download and install antiSMASH
+git clone --branch 7-0-stable https://github.com/antismash/antismash.git antismash7
+cd antismash7
+pip install -e .
+```
+
+**Becoming a MEME queen**
+
+The reason antiSMASH 7 is not one-line conda installable is that it 
+requires `meme<=4.11.2`, which doesn't play well with the other dependencies. 
+You will have to install the old version of meme suite separately and direct
+ antiSMASH to the binaries for `meme` and `fimo`. 
+
+You can create a separate conda environment just for the old meme version,
+then tell antiSMASH permanently where to find the binaries using the antiSMASH
+config file:
+```bash
+# Or if you have a working antSMASH v6 environment, just activate that instead
+mamba create --name meme_4.11.2 -c bioconda meme=4.11.2
+mamba activate meme_4.11.2
+
+# Permanently tell antiSMASH v7 where to find the executables
+echo "executable-paths meme=$(which meme),fimo=$(which fimo)" >> ~/.antismash7.cfg
+
+# Return to antismash environment
+mamba activate antismash7
+```
+
+Finally, download the various databases that antiSMASH requires:
+```bash
+download-antismash-databases
+```
+OR if they're already downloaded, tell antiSMASH where to find them:
+```bash
+echo "databases /path/to/antismash-databases" >> ~/.antismash7.cfg
+```
+
+Test your installation:
+```bash
+antismash --check-prereqs
+```
+
+## Citing multiSMASH
+If you find multiSMASH useful, please cite the Zenodo DOI: [10.5281/zenodo.8276144](10.5281/zenodo.8276144).

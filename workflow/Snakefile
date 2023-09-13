@@ -1,104 +1,96 @@
-import os
+import shutil
 
-#### Initialize input ####
+include: "rules/common.smk"
 
-# Get job prefix and confirm config exists
-try:
-    JOB_PREFIX = config["job_prefix"]
-except KeyError as e:
-    print("Error finding a job prefix. Did you use a --configfile?")
-    raise e
+paths = build_paths()
+GENOMES = get_samples(paths)
 
-# expanduser allows ~
-RESULT_DIR = os.path.expanduser(f"{config['results_dir']}/{JOB_PREFIX}")
+BIG_ENV, BIG_COMMAND = get_bigscape_env()
 
-# Gather input files
-DATA_DIR = os.path.expanduser(config["data_dir"])
-DATA_EXT = config["data_ext"]
-
-# antismash results as input
-if not DATA_EXT:
-    GENOMES, toss = glob_wildcards(f"{DATA_DIR}/{{genome}}/{{toss}}.json")
-    AS_DIR = DATA_DIR
-    print(f"{len(GENOMES)} antiSMASH results found")
-
-# genome files as input
-else:
-    GENOMES, = glob_wildcards(f"{DATA_DIR}/{{genome}}.{DATA_EXT}")
-    print(f"{len(GENOMES)} {DATA_EXT} files found")
-    AS_DIR = f"{RESULT_DIR}/antismash"
-if not GENOMES:
-    raise OSError(f"Error! Unable to find data in '{DATA_DIR}' "
-                  f"with extension '{DATA_EXT}'.")
-
-## Result locations
-BIG_DIR = f"{RESULT_DIR}/bigscape"
-
-def get_inputs_for_all(wildcards):
-    inputs = [
-        # tabulate_regions
-        f"{RESULT_DIR}/all_regions.tsv",
-        # count_regions
-        f"{RESULT_DIR}/region_counts.tsv"
-    ]
-    # bigscape
-    if config["run_bigscape"]:
-        inputs.append(f"{BIG_DIR}.tar.gz")
-    return inputs
-
+# Copy the config file into the log directory
+paths["LOG_DIR"].mkdir(parents=True)
+shutil.copy(workflow.configfiles[0], paths["LOG_DIR"] / "input_config.yaml")
 
 rule all:
     input:
-        get_inputs_for_all
+        get_inputs_for_all(paths)
 
 
-#### AntiSMASH rules ####
-
-# TODO: give logging on failed runs - check if a dir is empty after this
 # TODO: gff support
 rule run_antismash:
     input:
-        genomes = f"{DATA_DIR}/{{GENOMES}}.{DATA_EXT}",
+        genomes = f"{paths['IN_DIR']}/{{GENOMES}}.{config['in_ext']}",
     params:
         antismash = config["antismash_command"],
         antismash_flags = config["antismash_flags"],
-        reuse = "--reuse-results" if config["antismash_reuse_results"] else ""
-    output: directory(f"{AS_DIR}/{{GENOMES}}")
-    conda: config["antismash_conda"]
-    shell: "{params.antismash} --output-dir {output} -c 1 {params.antismash_flags} {params.reuse} {input.genomes} || mkdir -p {output}"
+        reuse = "--reuse-results" if config["antismash_reuse_results"] else "",
+        fail_log = paths['LOG_DIR'] / "antismash_errors.log",
+        accept_failure = config['antismash_accept_failure']
+    output:
+        out_dir = directory(f"{paths['AS_DIR']}/{{GENOMES}}"),
+        out_gbk = f"{paths['AS_DIR']}/{{GENOMES}}/{{GENOMES}}.gbk"  # Ensure the run finishes
+    conda: config["antismash_conda_env_name"]
+    log: paths['LOG_DIR'] / "antismash" / f"{{GENOMES}}.log"
+    shell:
+        """
+        touch {params.fail_log}
+        function prepend() {{ while read line; do echo "${{1}}${{line}}"; done; }}
+        if {{ asout=$({params.antismash} --output-dir {output.out_dir} -c 1 \
+                {params.antismash_flags} {params.reuse} {input.genomes} \
+                --logfile {log} 2>&1 \
+                | prepend "{wildcards.GENOMES}\t" \
+                | tee /dev/fd/3 | \
+                sed -n 's/.*ERROR//p'); }} 3>&1
+        then
+            :
+        else
+            echo "{wildcards.GENOMES}\t{input.genomes}\t$asout" >> {params.fail_log}
+            if {params.accept_failure}; then
+                mkdir -p {output.out_dir}
+                touch {output.out_gbk}
+            fi
+        fi
+        """
 
 rule tabulate_regions:
-    input: expand(f"{AS_DIR}/{{genomes}}", genomes = GENOMES)
-    params: AS_DIR
-    output: f"{RESULT_DIR}/all_regions.tsv"
-    shell: "python workflow/scripts/tabulate_regions.py {params} {output}"
+    input: expand(f"{paths['AS_DIR']}/{{genomes}}/{{genomes}}.gbk", genomes = GENOMES)
+    params:
+        script = paths["TABULATE"],
+        asdir = paths['AS_DIR']
+    output: f"{paths['OUT_DIR']}/all_regions.tsv"
+    shell: "python {params.script} {params.asdir} {output}"
 
 rule count_regions:
-    input: expand(f"{AS_DIR}/{{genomes}}", genomes = GENOMES)
+    input: expand(f"{paths['AS_DIR']}/{{genomes}}/{{genomes}}.gbk", genomes = GENOMES)
     params:
-        asdir = AS_DIR,
-        contig = "--contig" if config["contig"] else "",
-        hybrid= "--hybrid" if config["hybrid"] else ""
-    output: f"{RESULT_DIR}/region_counts.tsv"
-    shell: "python workflow/scripts/count_regions.py {params.asdir} {output} {params.contig} {params.hybrid}"
+        script = paths["COUNT"],
+        asdir = paths['AS_DIR'],
+        contig = "--by_contig" if config["count_per_contig"] else "",
+        hybrid = "--hybrid" if config["split_hybrids"] else ""
+    output: f"{paths['OUT_DIR']}/region_counts.tsv"
+    shell: "python {params.script} {params.asdir} {output} {params.contig} {params.hybrid}"
 
 
 ## BiG-SCAPE rules
 
 if config["run_bigscape"]:
     rule run_bigscape:
-        input: expand(f"{AS_DIR}/{{genomes}}", genomes = GENOMES)
+        input: expand(f"{paths['AS_DIR']}/{{genomes}}/{{genomes}}.gbk", genomes = GENOMES)
         params:
-            asdir = AS_DIR,
-            outdir = BIG_DIR,
-            bigscape_command = config["bigscape_command"],
+            asdir = paths['AS_DIR'],
+            outdir = paths['BIG_DIR'],
+            pfam_dir = paths['PFAM_DIR'],
+            bigscape_command = BIG_COMMAND,
             bigscape_flags = config['bigscape_flags']
-        output: f"{BIG_DIR}/index.html"
-        conda: config["bigscape_conda"]
-        shell: "{params.bigscape_command} -i {params.asdir} -o {params.outdir} {params.bigscape_flags}"
+        output:
+            directory(f"{paths['BIG_DIR']}"),
+            f"{paths['BIG_DIR']}/index.html"
+        conda: BIG_ENV
+        shell: "{params.bigscape_command} -i {params.asdir} -o {params.outdir}"
+                " --pfam_dir {params.pfam_dir} {params.bigscape_flags}"
 
     rule tar_bigscape:
-        input: f"{BIG_DIR}/index.html"
-        params: BIG_DIR
-        output: f"{BIG_DIR}.tar.gz"
+        input: f"{paths['BIG_DIR']}/index.html"
+        params: paths['BIG_DIR']
+        output: f"{paths['BIG_DIR']}.tar.gz"
         shell: "tar --exclude 'cache' -zcf {output} -C {params} ."

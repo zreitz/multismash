@@ -18,13 +18,13 @@ def parse_json(path):
     return data["input_file"], by_contig
 
 
-def tabulate(type_dict, contig=False, hybrid=False):
+def tabulate(type_dict, contig=False, split_hybrids=False):
     table_list = []
     this_row = {}
     for genome, g_prods in type_dict.items():
         for cont, regions in g_prods.items():
             for region in regions:
-                if hybrid and len(region) > 1:
+                if len(region) > 1 and not split_hybrids:
                     this_row["hybrid"] = this_row.get("hybrid", 0) + 1
                     continue
                 for prod in region:
@@ -69,11 +69,13 @@ if __name__ == "__main__":
                         help="directory containing antiSMASH directories")
     parser.add_argument("outpath", type=str,
                         help="desired path+name for the output TSV")
-    parser.add_argument("--contig", action="store_true",
-                        help="each row of the table is an individual contig rather than a genome")
-    parser.add_argument("--hybrid", action="store_true",
-                        help="hybrid regions are only counted once, as 'hybrid'")
+    parser.add_argument("--by_contig", action="store_true",
+                        help="count regions per each individual contig rather than per assembly")
+    parser.add_argument("--split_hybrids", action="store_true",
+                        help="count each hybrid region multiple times, once for each "
+                             "constituent BGC class. Caution: this flag artificially "
+                             "inflates total BGC counts")
 
     args = parser.parse_args()
 
-    main(args.asdir, args.outpath, args.contig, args.hybrid)
+    main(args.asdir, args.outpath, args.by_contig, args.split_hybrids)
