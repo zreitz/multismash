@@ -55,7 +55,7 @@ to see all available parameters. Flags you may find useful:
 ### Other installation notes
 * If you are only using the [standalone scripts](#standalone-scripts) for 
   tabulating existing antiSMASH runs, then no dependencies are needed beyond
-  `python>=3.7` and the standard library. Simply download them from this repository.
+  `python>=3.7` and the standard library. Simply download the scripts from this repository.
 * If you want to install multiSMASH in its own conda environment, you can do so,
   otherwise following installation instructions above. You will have to adjust the
   `antismash_conda_env_name` and `antismash_command` parameters in the config file.
@@ -73,7 +73,9 @@ to see all available parameters. Flags you may find useful:
 ## Usage
 
 ### An example workflow
-Inputs, outputs, and all other flags are set in a job-specific configuration file. 
+Inputs, outputs, and all other flags are set in a job-specific configuration file that is 
+used as a required argument for `multismash`.
+
 A working example is provided in [example/config-example.yaml](example/config-example.yaml), 
 along with three *E. coli* genomes.
 
@@ -110,8 +112,6 @@ multismash example/config-example.yaml
 
 The results can be found in `multismash/example_output/`, as specified by the 
 `out_dir` configuration. 
-In addition to the results themselves, the `log/` subdirectory contains the 
-output of each antiSMASH job so errors can be investigated.
 
 ### Error handling: what happens if individual antiSMASH jobs fail
 The logs for each antiSMASH run are stored within the output directory in 
@@ -122,8 +122,8 @@ if any job fails, non-dependent jobs will continue to be run. After every
 antiSMASH run is attempted, the tabulation jobs will fail (due to missing inputs),
 and multiSMASH will exit.
 
-To have multiSMASH exit on the first job failure, remove `--keep-going` \
-  from the configuration `snakemake_flags`.
+To have multiSMASH exit on the first job failure, remove `--keep-going` 
+from the configuration `snakemake_flags`.
 
 To have multiSMASH run tabulation and/or BiG-SCAPE even after job failure(s),
 set the configuration `antismash_accept_failure: True`. **Note: An empty 
@@ -149,8 +149,6 @@ options:
   -h, --help  show this help message and exit
 ```
 
-Example output: [results/example/all_regions.tsv](results/example/all_regions.tsv)
-
 ### count_regions.py
 Given a bunch of antismash results, count the BGC regions
 ```text
@@ -166,8 +164,6 @@ options:
   --split_hybrids  count each hybrid region multiple times, once for each constituent 
                    BGC class. Caution: this flag artificially inflates total BGC counts
 ```
-
-Example output: [results/example/region_counts.tsv](results/example/region_counts.tsv)
 
 
 ## antiSMASH 7 installation protocol
