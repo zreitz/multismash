@@ -48,6 +48,8 @@ rule run_antismash:
             if {params.accept_failure}; then
                 mkdir -p {output.out_dir}
                 touch {output.out_gbk}
+            else
+                exit 1
             fi
         fi
         """
