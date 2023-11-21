@@ -68,7 +68,7 @@ rule count_regions:
         script = paths["COUNT"],
         asdir = paths['AS_DIR'],
         contig = "--by_contig" if config["count_per_contig"] else "",
-        hybrid = "--hybrid" if config["split_hybrids"] else ""
+        hybrid = "--split_hybrids" if config["split_hybrids"] else ""
     output: f"{paths['OUT_DIR']}/region_counts.tsv"
     shell: "python {params.script} {params.asdir} {output} {params.contig} {params.hybrid}"
 
