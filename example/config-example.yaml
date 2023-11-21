@@ -17,14 +17,14 @@ run_tabulation: True
 run_bigscape: False
 
 
-#------------<  Set these if the defaults don't match your needs  >------------#
+#------------<  Change these if the defaults don't match your needs  >------------#
 
 # Flags for Snakemake are set on the command line, but you can also set them here.
 snakemake_flags:
   --keep-going              # Go on with independent jobs if a job fails
 
 
-## The following flags are set by multiSMASH and cannot be used directly:
+## Note: The following flags are set by multiSMASH and cannot be used directly:
 #     --snakefile --cores --use-conda --configfile --conda-prefix
 
 
@@ -70,7 +70,7 @@ zip_bigscape: True
 
 
 
-#-----------<  Set these if you have a non-standard installation  >-----------#
+#-----------<  Change these if you have a non-standard installation  >-----------#
 
 ## Only set this if antiSMASH is in a different environment from multiSMASH
 antismash_conda_env_name:
