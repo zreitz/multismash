@@ -167,7 +167,7 @@ options:
 
 
 ## antiSMASH 7 installation protocol
-Here's my secret recipe for an antiSMASH 7.0 conda environment that is multiSMASH-compatible.
+Here's my secret recipe for an antiSMASH 7 conda environment that is multiSMASH-compatible.
 See [the official antiSMASH documentation](https://docs.antismash.secondarymetabolites.org/install/) 
  for more installation options. 
 
@@ -179,8 +179,9 @@ mamba activate antismash7
 # Install dependencies
 mamba install -c bioconda hmmer2 hmmer diamond fasttree prodigal glimmerhmm
 
-# Download and install antiSMASH
-git clone --branch 7-0-stable https://github.com/antismash/antismash.git antismash7
+# Download and install antiSMASH v7.1
+# Get different versions by changing the branch: https://github.com/antismash/antismash/branches/all
+git clone --branch 7-1-stable https://github.com/antismash/antismash.git antismash7   
 cd antismash7
 pip install -e .
 ```
