@@ -222,4 +222,4 @@ antismash --check-prereqs
 ```
 
 ## Citing multiSMASH
-If you find multiSMASH useful, please cite the Zenodo DOI: [10.5281/zenodo.8276144](10.5281/zenodo.8276144).
+If you find multiSMASH useful, please cite the Zenodo DOI: [10.5281/zenodo.8276143](https://zenodo.org/doi/10.5281/zenodo.8276143)
