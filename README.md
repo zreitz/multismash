@@ -167,7 +167,7 @@ options:
 
 
 ## antiSMASH 7 installation protocol
-Here's my secret recipe for an antiSMASH 7 conda environment that is multiSMASH-compatible.
+Here's my recipe for an antiSMASH 7 conda environment that is multiSMASH-compatible.
 See [the official antiSMASH documentation](https://docs.antismash.secondarymetabolites.org/install/) 
  for more installation options. 
 
@@ -184,6 +184,10 @@ mamba install -c bioconda hmmer2 hmmer diamond fasttree prodigal glimmerhmm
 git clone --branch 7-1-stable https://github.com/antismash/antismash.git antismash7   
 cd antismash7
 pip install -e .
+```
+If you encounter the `pip` error `Cargo, the Rust package manager, is not installed or is not on PATH`, use [rustup](https://doc.rust-lang.org/cargo/getting-started/installation.html) to install it:
+```
+curl https://sh.rustup.rs -sSf | sh
 ```
 
 **Becoming a MEME queen**
