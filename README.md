@@ -32,7 +32,7 @@ pip install -e .
 ```
 
 `multismash` should now be added to your path and ready to use from any directory:
-```bash
+```
 $ multismash -h
 usage: multismash [-h] configfile [--cores CORES] [...]
 
@@ -112,6 +112,18 @@ multismash example/config-example.yaml
 
 The results can be found in `multismash/example_output/`, as specified by the 
 `out_dir` configuration. 
+
+### Note: default antiSMASH configuration
+By default, antiSMASH is run with the `--minimal` flag, as set in the configuration `antismash_flags`. 
+A minimal run reduces the run time by skipping many of the features that aren't used in the downstream 
+tabulation, **including HTML generation**, as well as optional analysis modules such as NRPS/PKS domain or 
+lanthipeptide precursor prediction. I made this the default because the time saving is significant, and
+if I'm running hundreds of genomes, I'm not looking at most of the HTML files anyway.
+
+If you want the HTML output for each run, you can add `--enable-html` to the configuration `antismash_flags`. 
+To restore the antiSMASH default settings, remove the `--minimal` flag. Alternatively, I usually copy 
+BGC region GBKs of interest to a new folder and use them as input for a second round of multiSMASH 
+with a richer set of antiSMASH flags.
 
 ### Error handling: what happens if individual antiSMASH jobs fail
 The logs for each antiSMASH run are stored within the output directory in 
