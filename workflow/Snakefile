@@ -45,7 +45,7 @@ rule run_antismash:
             :
         else
             echo "{wildcards.GENOMES}\t{input.genomes}\t$asout" >> {params.fail_log}
-            if {params.accept_failure}; then
+            if [ {params.accept_failure} = "True" ]; then
                 mkdir -p {output.out_dir}
                 touch {output.out_gbk}
             else
