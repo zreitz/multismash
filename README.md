@@ -61,7 +61,8 @@ to see all available parameters. Flags you may find useful:
   `antismash_conda_env_name` and `antismash_command` parameters in the config file.
 * **BiG-SCAPE** is turned off by default. The first time a BiG-SCAPE job is 
   requested (`run_bigscape: True` in the config file) then multiSMASH will 
-  automatically install `bigscape=1.1.5` and download the latest Pfam database.
+  automatically install `bigscape` from Bioconda with the message
+  "Creating conda environment workflow/envs/bigscape.yaml..."
   If you want to use your own [BiG-SCAPE conda installation](https://github.com/medema-group/BiG-SCAPE/wiki/installation), 
   point multiSMASH to the correct locations with the last three parameters
   of the config file.
