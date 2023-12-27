@@ -1,0 +1,52 @@
+[
+    {
+        "file": "GCF_000407825_minimal",
+        "record_id": "NZ_KE136672",
+        "region": "1",
+        "start": "210696",
+        "end": "236988",
+        "contig_edge": "False",
+        "product": "thiopeptide",
+        "record_desc": "NZ_KE136672"
+    },
+    {
+        "file": "GCF_000407825_minimal",
+        "record_id": "NZ_KE136672",
+        "region": "1",
+        "start": "7576",
+        "end": "19112",
+        "contig_edge": "True",
+        "product": "RiPP-like",
+        "record_desc": "NZ_KE136672"
+    },
+    {
+        "file": "GCF_000407825_minimal",
+        "record_id": "NZ_KE136674",
+        "region": "1",
+        "start": "556378",
+        "end": "619578",
+        "contig_edge": "False",
+        "product": "NRP-metallophore / NRPS / T1PKS",
+        "record_desc": "NZ_KE136674"
+    },
+    {
+        "file": "GCF_000407825_minimal",
+        "record_id": "NZ_KE136675",
+        "region": "1",
+        "start": "556378",
+        "end": "619578",
+        "contig_edge": "False",
+        "product": "NRP-metallophore / NRPS / T1PKS",
+        "record_desc": "NZ_KE136675"
+    },
+    {
+        "file": "GCF_000407825_minimal",
+        "record_id": "NZ_KE136675",
+        "region": "1",
+        "start": "556378",
+        "end": "619578",
+        "contig_edge": "False",
+        "product": "NRP-metallophore / NRPS / T1PKS",
+        "record_desc": "NZ_KE136675"
+    }
+]
