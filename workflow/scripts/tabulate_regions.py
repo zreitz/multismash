@@ -18,7 +18,12 @@ def parse_json(path):
             continue
         regions = [feat for feat in record["features"]
                    if feat["type"] == "region"]
-        for region in regions:
+        # Add knownclusterblast if present
+        try:
+            knownblast = record["modules"]["antismash.modules.clusterblast"]["knowncluster"]["results"]
+        except (KeyError, TypeError, AttributeError):
+            knownblast = None
+        for i, region in enumerate(regions):
             start, end = re.findall(r'\d+', region["location"])
             region_dict = {
                 "file":         path.stem,
@@ -30,6 +35,16 @@ def parse_json(path):
                 "product":      " / ".join(region["qualifiers"]["product"]),
                 "record_desc":  record["description"]
             }
+            kcb_dict = {"KCB_hit": "", "KCB_acc": "", "KCB_%": ""}
+            if knownblast:
+                hits = knownblast[i]["ranking"]
+                if hits:
+                    kcb_dict = {
+                        "KCB_hit": hits[0][0]["description"],
+                        "KCB_acc":  hits[0][0]["accession"],
+                        "KCB_%":  hits[0][1]["similarity"]
+                    }
+            region_dict.update(kcb_dict)
             result_list.append(region_dict)
     return result_list
 
@@ -43,7 +58,9 @@ def main(asdir, outpath):
 
     fieldnames = ["file", "record_id", "region",
                   "start", "end", "contig_edge",
-                  "product", "record_desc"]
+                  "product",
+                  "KCB_hit", "KCB_acc", "KCB_%",
+                  "record_desc"]
     with open(outpath, 'w') as outf:
         writer = csv.DictWriter(outf, fieldnames=fieldnames, delimiter="\t")
         writer.writeheader()

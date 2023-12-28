@@ -148,7 +148,27 @@
             ]
           }
         }
-      ]
+      ],
+      "modules": {
+        "antismash.modules.clusterblast": {
+          "knowncluster": {
+            "results": [
+              {
+                "ranking": [[
+                  {
+                  "accession": "BGC0001055",
+                  "description": "yersiniabactin"
+                  },
+                  {"similarity": 30}
+                ]]
+              },
+              {
+                "ranking": []
+              }
+            ]
+          }
+        }
+      }
     }
   ]
 }

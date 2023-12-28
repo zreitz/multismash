@@ -7,7 +7,10 @@
         "end": "236988",
         "contig_edge": "False",
         "product": "thiopeptide",
-        "record_desc": "NZ_KE136672"
+        "record_desc": "NZ_KE136672",
+        "KCB_hit": "",
+        "KCB_acc": "",
+        "KCB_%": ""
     },
     {
         "file": "GCF_000407825_minimal",
@@ -17,7 +20,10 @@
         "end": "19112",
         "contig_edge": "True",
         "product": "RiPP-like",
-        "record_desc": "NZ_KE136672"
+        "record_desc": "NZ_KE136672",
+        "KCB_hit": "",
+        "KCB_acc": "",
+        "KCB_%": ""
     },
     {
         "file": "GCF_000407825_minimal",
@@ -27,7 +33,10 @@
         "end": "619578",
         "contig_edge": "False",
         "product": "NRP-metallophore / NRPS / T1PKS",
-        "record_desc": "NZ_KE136674"
+        "record_desc": "NZ_KE136674",
+        "KCB_hit": "",
+        "KCB_acc": "",
+        "KCB_%": ""
     },
     {
         "file": "GCF_000407825_minimal",
@@ -37,7 +46,10 @@
         "end": "619578",
         "contig_edge": "False",
         "product": "NRP-metallophore / NRPS / T1PKS",
-        "record_desc": "NZ_KE136675"
+        "record_desc": "NZ_KE136675",
+        "KCB_hit": "yersiniabactin",
+        "KCB_acc": "BGC0001055",
+        "KCB_%": 30
     },
     {
         "file": "GCF_000407825_minimal",
@@ -47,6 +59,9 @@
         "end": "619578",
         "contig_edge": "False",
         "product": "NRP-metallophore / NRPS / T1PKS",
-        "record_desc": "NZ_KE136675"
+        "record_desc": "NZ_KE136675",
+        "KCB_hit": "",
+        "KCB_acc": "",
+        "KCB_%": ""
     }
 ]
