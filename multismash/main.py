@@ -46,29 +46,6 @@ def install_bigscape(configs):
         assert(bigscape_dir.exists())
         tar.unlink()    # Delete
 
-    # check if the Pfam files exist, and if not, download them
-    pfam_dir = configs["pfam_dir"]
-    if pfam_dir:
-        pfam = Path(args.configfile).parents[0] / Path(pfam_dir)
-        pfam = pfam.expanduser().resolve()
-    else:
-        pfam = Path(__file__).parents[1] / "pfam"
-    files = [pfam / ("Pfam-A.hmm" + ext) for ext in ["", ".gz", ".h3f", ".h3i", ".h3m", ".h3p"]]
-
-    # Only download if needed and after prompt
-    if not files[0].exists():  # Pfam-A.hmm
-        if not files[1].exists():  # Pfam-A.hmm.gz
-            Path.mkdir(pfam, exist_ok=True)
-            print("Downloading the Pfam database from EBI...")
-            url = "https://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz"
-            subprocess.run(["curl", "-o", files[1], url], check=True)
-        subprocess.run(["gunzip", files[1]], check=True)
-
-    if not all((file.exists() for file in files[2:])):
-        print("Pressing the Pfam database...")
-        subprocess.run(["hmmpress", files[0]], check=True)
-        print("Done")
-
 
 def main():
     args, snakemake_args = parse_args()

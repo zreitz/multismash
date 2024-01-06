@@ -81,8 +81,8 @@ antismash_command: antismash       # Or maybe `python /path/to/run_antismash.py`
 #   If you already have a BiG-SCAPE environment that you want to use,
 #   put the environment name here.
 bigscape_conda_env_name:
-bigscape_command:                 # Maybe python /path/to/bigscape/bigscape.py
+bigscape_command:                 # Maybe "bigscape.py" for some versions
 # BiG-SCAPE also requires a hmmpress'd Pfam database (Pfam-A.hmm plus .h3* files).
-#     It will be downloaded automatically (in /path/to/multismash/pfam),
-#     or if they already exist, you can specify the parent directory here.
+#   By default, multiSMASH uses antiSMASH's Pfam directory. If antiSMASH isn't installed,
+#   or multiSMASH instructs you to do so, set this to the directory containing Pfam-A.hmm.
 pfam_dir:                         # Relative paths are relative to THIS file!
