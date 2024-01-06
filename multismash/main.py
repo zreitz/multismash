@@ -39,9 +39,14 @@ def install_bigscape(configs):
         conda_dir.mkdir(exist_ok=True)
         tar = Path(str(bigscape_dir) + ".tar.gz")
         if not tar.exists():
-            input(f"BiG-SCAPE will be downloaded to {bigscape_dir}/. Press Enter to continue.")
+            input(f"BiG-SCAPE will be downloaded and installed to {bigscape_dir}/. Press Enter to continue.")
             url = "https://github.com/medema-group/BiG-SCAPE/archive/refs/tags/v1.1.5.tar.gz"
-            subprocess.run(["curl", url, "-L", "-o", tar], check=True)
+            try:
+                subprocess.run(["curl", url, "-L", "-o", tar], check=True)
+            except Exception as e:
+                print(f"\n\n{type(e).__name__} detected: removing partial file")
+                subprocess.run(["rm", "-f", tar])
+                raise e
         subprocess.run(["tar", "-xzf", tar, "-C", conda_dir], check=True)
         assert(bigscape_dir.exists())
         tar.unlink()    # Delete
