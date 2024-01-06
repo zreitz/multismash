@@ -43,7 +43,7 @@ def install_bigscape(configs):
             url = "https://github.com/medema-group/BiG-SCAPE/archive/refs/tags/v1.1.5.tar.gz"
             try:
                 subprocess.run(["curl", url, "-L", "-o", tar], check=True)
-            except Exception as e:
+            except (KeyboardInterrupt, Exception) as e:
                 print(f"\n\n{type(e).__name__} detected: removing partial file")
                 subprocess.run(["rm", "-f", tar])
                 raise e
