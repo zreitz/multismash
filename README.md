@@ -238,5 +238,13 @@ Test your installation:
 antismash --check-prereqs
 ```
 
+## Funding and Acknowledgements
+I am currently developing/maintaining multiSMASH in my spare time. 
+The workflow was conceived while working with Marnix H. Medema at 
+the Wageningen University & Research Bioinformatics Group, 
+supported by his European Research Council Starting Grant (948770-DECIPHER).
+
+Thanks to Simon Shaw and Kai Blin for answering many antiSMASH questions.
+
 ## Citing multiSMASH
 If you find multiSMASH useful, please cite the Zenodo DOI: [10.5281/zenodo.8276143](https://zenodo.org/doi/10.5281/zenodo.8276143)
