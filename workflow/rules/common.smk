@@ -64,7 +64,25 @@ def get_bigscape_env():
     if not command:
         command = Path(workflow.basedir).parent / "conda" / "BiG-SCAPE-1.1.5" / "bigscape.py"
         command = f"python {command}"
-    return env, command
+
+    pfam = config["pfam_dir"]
+    # Use antismash functions to find and validate the Pfam directory
+    if not pfam:
+        exit_message = "Unable to locate Pfam-A.hmm. Please set the 'pfam_dir' " \
+                       "flag in the configuration file."
+        try:
+            from antismash.config import build_config
+            from antismash.common.pfamdb import get_latest_db_path, ensure_database_pressed
+        except ImportError:
+            raise SystemExit(exit_message)
+        try:
+            pfam = get_latest_db_path(build_config([]).database_dir)
+        except ValueError:
+            raise SystemExit(exit_message)
+
+        pfam = pfam.replace("Pfam-A.hmm", "")   # We want the directory
+
+    return env, command, pfam
 
 
 def get_inputs_for_all(paths):

@@ -5,8 +5,6 @@ include: "rules/common.smk"
 paths = build_paths()
 GENOMES = get_samples(paths)
 
-BIG_ENV, BIG_COMMAND = get_bigscape_env()
-
 # Copy the config file into the log directory
 paths["LOG_DIR"].mkdir(parents=True)
 shutil.copy(workflow.configfiles[0], paths["LOG_DIR"] / "input_config.yaml")
@@ -76,20 +74,23 @@ rule count_regions:
 ## BiG-SCAPE rules
 
 if config["run_bigscape"]:
+    BIG_ENV, BIG_COMMAND, BIG_PFAM = get_bigscape_env()
+
     rule run_bigscape:
         input: expand(f"{paths['AS_DIR']}/{{genomes}}/{{genomes}}.gbk", genomes = GENOMES)
         params:
             asdir = paths['AS_DIR'],
             outdir = paths['BIG_DIR'],
-            pfam_dir = paths['PFAM_DIR'],
             bigscape_command = BIG_COMMAND,
-            bigscape_flags = config['bigscape_flags']
+            pfam_dir= BIG_PFAM,
+            bigscape_flags = config['bigscape_flags'],
+            cores = config['cores']
         output:
             directory(f"{paths['BIG_DIR']}"),
             f"{paths['BIG_DIR']}/index.html"
         conda: BIG_ENV
         shell: "{params.bigscape_command} -i {params.asdir} -o {params.outdir}"
-                " --pfam_dir {params.pfam_dir} {params.bigscape_flags}"
+                " -c {params.cores} --pfam_dir {params.pfam_dir} {params.bigscape_flags}"
 
     rule tar_bigscape:
         input: f"{paths['BIG_DIR']}/index.html"
