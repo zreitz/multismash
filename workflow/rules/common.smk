@@ -79,7 +79,6 @@ def get_bigscape_env():
             pfam = get_latest_db_path(build_config([]).database_dir)
         except ValueError:
             raise SystemExit(exit_message)
-        ensure_database_pressed(pfam)
 
         pfam = pfam.replace("Pfam-A.hmm", "")   # We want the directory
 
