@@ -6,7 +6,7 @@ cores: 3
 # Input directory containing the data
 in_dir: genbanks                  # Relative paths are relative to THIS file!
 
-# Input file extension
+# Input file extension (no leading period)
 in_ext: gbff.gz                   # Leave blank for antiSMASH result folders
 
 # Output directory to store the results
