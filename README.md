@@ -6,7 +6,7 @@ wrapper that streamlines large-scale analyses of biosynthetic gene clusters (BGC
 across multiple genomes.
 
 The pipeline can:
-1. Parallelize antiSMASH runs on user-supplied genomes (OR accept existing results)
+1. Parallelize antiSMASH runs on user-supplied genomes ([OR accept existing results](#TabulatingexistingantiSMASHresults))
 2. Summarize and tabulate the antiSMASH results 
    with [information on each region](#tabulateregionspy) 
    and [per-genome BGC counts](#countregionspy)
@@ -142,6 +142,25 @@ set the configuration `antismash_accept_failure: True`. **Note: An empty
 `<genome>/<genome>.gbk` file will be created.** A record of failed jobs 
 will appear in the `antismash_errors.log` file, but those genomes will not appear 
 in the tabulated outputs.
+
+### Tabulating existing antiSMASH results
+multiSMASH can also work with existing antiSMASH results. 
+For a collection of antiSMASH result folders like this:
+```
+├── antismash_results
+│   ├── genome_1
+|   │   ├── genome_1.json
+|   │   ├── genome_1.gbk
+|   │   └── ...
+│   ├── genome_2
+|   │   ├── genome_2.json
+|   │   ├── genome_2.gbk
+|   │   └── ...
+│   ├── ...
+```
+Set the `in_dir` configuration to `[path/to/]antismash_results` and leave
+the `in_ext` configuration blank. All other configurations can be used normally,
+and any antiSMASH-related configurations will be ignored.
 
 ## Standalone scripts
 
