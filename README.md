@@ -6,10 +6,10 @@ wrapper that streamlines large-scale analyses of biosynthetic gene clusters (BGC
 across multiple genomes.
 
 The pipeline can:
-1. Parallelize antiSMASH runs on user-supplied genomes ([OR accept existing results](#TabulatingexistingantiSMASHresults))
+1. Parallelize antiSMASH runs on user-supplied genomes ([OR accept existing results](#tabulating-existing-antismash-results))
 2. Summarize and tabulate the antiSMASH results 
-   with [information on each region](#tabulateregionspy) 
-   and [per-genome BGC counts](#countregionspy)
+   with [information on each region](#tabulate_regionspy) 
+   and [per-genome BGC counts](#count_regionspy)
 3. Run [BiG-SCAPE](https://github.com/medema-group/BiG-SCAPE/wiki) on the 
    resulting BGCs to visualize gene cluster families (GCFs).
 
@@ -17,7 +17,7 @@ The pipeline can:
 
 ### Recommended: Installing multiSMASH inside an antiSMASH conda environment
 
-*For help installing antiSMASH, see my [antiSMASH 7 installation protocol](#antiSMASH-7-installation-protocol) 
+*For help installing antiSMASH, see my [antiSMASH 7 installation protocol](#antismash-7-installation-protocol) 
 below or [the official antiSMASH documentation](https://docs.antismash.secondarymetabolites.org/install/).*
 
 Activate the antiSMASH environment:
