@@ -36,7 +36,9 @@ antismash_flags:
   #--genefinding-tool none
   #--no-abort-on-invalid-records
 
-
+# If you have paired fasta/gff inputs, multiSMASH will set the --genefinding-gff3 flag.
+#     Put the extension of the annotations here (e.g. gff or gff3). Basename must match the fasta!
+antismash_annotation_ext: #gff3
 # Should downstream steps (tabulation and/or BiG-SCAPE) run if jobs fail?
 antismash_accept_failure: False
 # Should multiSMASH set the --reuse-results flag? (for antiSMASH JSON inputs)

@@ -22,6 +22,8 @@ properties:
 
   antismash_flags:
     type: [string, "null"]
+  antismash_annotation_ext:
+    type: [string, "null"]
   antismash_reuse_results:
     type: boolean
   antismash_accept_failure:
