@@ -17,14 +17,14 @@ rule all:
 rule run_antismash:
     input:
         genomes = f"{paths['IN_DIR']}/{{GENOMES}}.{config['in_ext']}",
-        annotations = f"{paths['IN_DIR']}/{{GENOMES}}.{config['antismash_annotation_ext']}" \
-            if config['antismash_annotation_ext'] else [],
+        annotations = f"{paths['IN_DIR']}/{{GENOMES}}.{config.get('antismash_annotation_ext')}" \
+            if config.get('antismash_annotation_ext') else [],
     params:
         antismash = config["antismash_command"],
         antismash_flags = config["antismash_flags"],
         reuse = "--reuse-results" if config["antismash_reuse_results"] else "",
         annotations = lambda w, input: "".join(("--genefinding-gff3 \"",input.annotations,'"')) \
-            if config['antismash_annotation_ext'] else "",
+            if config.get('antismash_annotation_ext') else "",
         fail_log = paths['LOG_DIR'] / "antismash_errors.log",
         accept_failure = config['antismash_accept_failure']
     output:

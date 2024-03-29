@@ -14,7 +14,7 @@ out_dir: ../example_output        # Paths can also be absolute
 
 # Desired analyses - antiSMASH will always be run unless existing results are given
 run_tabulation: True
-run_bigscape: False
+run_bigscape: True
 
 
 #------------<  Change these if the defaults don't match your needs  >------------#

@@ -47,7 +47,7 @@ def get_samples(paths):
     else:
         GENOMES, = glob_wildcards(f"{in_dir}/{{genome}}.{IN_EXT}")
         print(f"{len(GENOMES)} {IN_EXT} files found")
-        gff = config["antismash_annotation_ext"]
+        gff = config.get("antismash_annotation_ext")
         if gff:
             expected = expand(f"{paths['IN_DIR']}/{{genomes}}.{gff}", genomes = GENOMES)
             missing = [p for p in expected if not Path.exists(Path(p))]
