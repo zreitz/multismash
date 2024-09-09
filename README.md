@@ -164,7 +164,7 @@ and any antiSMASH-related configurations will be ignored.
 
 ### GFF3 gene annotations
 multiSMASH can accept paired fasta / GFF3 inputs (the antiSMASH flag `genefinding-gff3`)
-as of v0.3.2.  If the `antismash_annotation_ext` configuration is set, each fasta file must be 
+as of v0.4.0.  If the `antismash_annotation_ext` configuration is set, each fasta file must be 
 accompanied by a GFF3 file with the same directory and stem. For example,
 with the following configurations, if multiSMASH finds `path/to/example.fa`, 
 it also requires `path/to/example.gff`.

@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="multiSMASH",
-    version="0.3.1",
+    version="0.4.0",
     description="A snakemake-based antiSMASH wrapper for large-scale analyses",
     author="Zachary L. Reitz",
     author_email="zlreitz@gmail.com",
