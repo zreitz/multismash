@@ -28,7 +28,7 @@ Download this repository and enter it, then install the package with pip:
 ```bash
 git clone https://github.com/zreitz/multismash.git
 cd multismash
-pip install -e .
+pip install .
 ```
 
 `multismash` should now be added to your path and ready to use from any directory:
@@ -216,7 +216,8 @@ See [the official antiSMASH documentation](https://docs.antismash.secondarymetab
 
 ```bash
 # Create the environment. Conda should work too, but mamba is faster
-mamba create -n antismash7 python=3.10      # Python must be v 3.9+
+# Python must be v3.9+ (current dev version requires 3.11+)
+mamba create -n antismash7 python=3.10
 mamba activate antismash7
 
 # Install dependencies
@@ -226,7 +227,7 @@ mamba install -c bioconda hmmer2 hmmer diamond fasttree prodigal glimmerhmm
 # Get different versions by changing the branch: https://github.com/antismash/antismash/branches/all
 git clone --branch 7-1-stable https://github.com/antismash/antismash.git antismash7   
 cd antismash7
-pip install -e .
+pip install .
 ```
 If you encounter the `pip` error `Cargo, the Rust package manager, is not installed or is not on PATH`, use [rustup](https://doc.rust-lang.org/cargo/getting-started/installation.html) to install it:
 ```
@@ -266,6 +267,7 @@ echo "databases /path/to/antismash-databases" >> ~/.antismash7.cfg
 
 Test your installation:
 ```bash
+# Should return "All prerequisites satisfied"
 antismash --check-prereqs
 ```
 
