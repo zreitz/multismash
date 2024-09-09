@@ -2,7 +2,7 @@
 .idea
 multismash/multiSMASH.egg-info
 
-example_output/
-
+build/
 conda/
+example_output/
 pfam/
