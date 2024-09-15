@@ -3,8 +3,11 @@ $schema: http://json-schema.org/draft-07/schema#
 description: multismash configuration file
 properties:
   cores:
-    type: integer
-    minimum: 1
+    oneOf:
+      - type: integer
+        minimum: 1
+      - type: string
+        enum: ["all"]
   in_dir:
     type: string
   in_ext:

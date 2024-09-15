@@ -1,7 +1,7 @@
 #------------------------<  Set these for every job  >------------------------#
 
 # Cores to use in parallel
-cores: 3
+cores: 3                          # 'all' will use all available CPU cores
 
 # Input directory containing the data
 in_dir: genbanks                  # Relative paths are relative to THIS file!
