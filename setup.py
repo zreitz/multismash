@@ -14,5 +14,8 @@ setuptools.setup(
     ],
     python_requires=">=3.9",
     package_dir={"": "multismash"},
-    entry_points={"console_scripts": ["multismash = main:main"]}
+    entry_points={"console_scripts": [
+        "multismash = multismash:main",
+        "multismash-config = multismash_config:main"
+        ]}
 )
