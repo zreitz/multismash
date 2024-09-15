@@ -1,8 +1,9 @@
-.snakemake
-.idea
-multismash/multiSMASH.egg-info
-
+.idea/
+.snakemake/
 build/
 conda/
 example_output/
+multismash/multiSMASH.egg-info
 pfam/
+
+*.pyc
