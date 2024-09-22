@@ -1,4 +1,5 @@
 import argparse
+import os
 import subprocess
 import textwrap
 import yaml
@@ -31,27 +32,6 @@ def parse_args() -> Tuple[argparse.Namespace, List[str]]:
     return parser.parse_known_args()
 
 
-def install_bigscape(configs):
-    # If a bigscape environment isn't defined then download the repository
-    conda_dir = Path(__file__).parents[1] / "conda"
-    bigscape_dir = conda_dir / "BiG-SCAPE-1.1.5"
-    if not configs["bigscape_conda_env_name"] and not bigscape_dir.exists():
-        conda_dir.mkdir(exist_ok=True)
-        tar = Path(str(bigscape_dir) + ".tar.gz")
-        if not tar.exists():
-            input(f"BiG-SCAPE will be downloaded and installed to {bigscape_dir}/. Press Enter to continue.")
-            url = "https://github.com/medema-group/BiG-SCAPE/archive/refs/tags/v1.1.5.tar.gz"
-            try:
-                subprocess.run(["curl", url, "-L", "-o", tar], check=True)
-            except (KeyboardInterrupt, Exception) as e:
-                print(f"\n\n{type(e).__name__} detected: removing partial file")
-                subprocess.run(["rm", "-f", tar])
-                raise e
-        subprocess.run(["tar", "-xzf", tar, "-C", conda_dir], check=True)
-        assert(bigscape_dir.exists())
-        tar.unlink()    # Delete
-
-
 def main():
     args, snakemake_args = parse_args()
 
@@ -73,9 +53,6 @@ def main():
     # Validate the configfile
     schema = multismash_dir.joinpath("workflow", "schema", "config.schema.yaml")
     validate(configs, schema=str(schema))
-
-    if configs["run_bigscape"]:
-        install_bigscape(configs)
 
     # Get Snakefile relative to this file
     snakefile = multismash_dir.joinpath("workflow", "Snakefile")

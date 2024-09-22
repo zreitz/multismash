@@ -85,15 +85,15 @@ if config["run_bigscape"]:
             asdir = paths['AS_DIR'],
             outdir = paths['BIG_DIR'],
             bigscape_command = BIG_COMMAND,
-            pfam_dir= BIG_PFAM,
+            pfam_dir = BIG_PFAM,
             bigscape_flags = config['bigscape_flags'],
-            cores = config['cores']
+            cores = f"-c {config['cores']}" if isinstance(config['cores'], int) else ""
         output:
             directory(f"{paths['BIG_DIR']}"),
             f"{paths['BIG_DIR']}/index.html"
         conda: BIG_ENV
         shell: "{params.bigscape_command} -i {params.asdir} -o {params.outdir}"
-                " -c {params.cores} --pfam_dir {params.pfam_dir} {params.bigscape_flags}"
+                " {params.cores} --pfam_dir {params.pfam_dir} {params.bigscape_flags}"
 
     rule tar_bigscape:
         input: f"{paths['BIG_DIR']}/index.html"

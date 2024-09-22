@@ -70,8 +70,7 @@ def get_bigscape_env():
 
     command = config["bigscape_command"]
     if not command:
-        command = Path(workflow.basedir).parent / "conda" / "BiG-SCAPE-1.1.5" / "bigscape.py"
-        command = f"python {command}"
+        command = "bigscape"
 
     pfam = config["pfam_dir"]
     # Use antismash functions to find and validate the Pfam directory
