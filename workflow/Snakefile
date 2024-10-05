@@ -89,7 +89,6 @@ if config["run_bigscape"]:
             bigscape_flags = config['bigscape_flags'],
             cores = f"-c {config['cores']}" if isinstance(config['cores'], int) else ""
         output:
-            directory(f"{paths['BIG_DIR']}"),
             f"{paths['BIG_DIR']}/index.html"
         conda: BIG_ENV
         shell: "{params.bigscape_command} -i {params.asdir} -o {params.outdir}"
