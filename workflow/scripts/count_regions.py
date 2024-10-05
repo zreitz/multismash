@@ -10,15 +10,17 @@ import argparse
 
 def parse_json(path):
     by_contig = {}
+    descriptions = {}
     with open(str(path), 'r') as f:
         data = json.load(f)
     for record in data["records"]:
         products = [a["products"] for a in record["areas"]]
         by_contig[record["name"]] = products
-    return data["input_file"], by_contig
+        descriptions[record["name"]] = record.get("description", "")
+    return data["input_file"], by_contig, descriptions
 
 
-def tabulate(type_dict, contig=False, split_hybrids=False):
+def tabulate(type_dict, descriptions, contig=False, split_hybrids=False):
     table_list = []
     this_row = {}
     for genome, g_prods in type_dict.items():
@@ -32,30 +34,40 @@ def tabulate(type_dict, contig=False, split_hybrids=False):
             if contig:
                 this_row["record"] = "|".join((genome, cont))
                 this_row["total_count"] = len(regions)
+                this_row["description"] = descriptions[genome][cont]
                 table_list.append(this_row)
                 this_row = {}
         if not contig:
             this_row["record"] = genome
             this_row["total_count"] = sum((len(regions) for regions in g_prods.values()))
+            this_row["description"] = f"{descriptions[genome][next(iter(g_prods))]}" \
+                f" [{len(g_prods)} total record{'s' if len(g_prods) > 1 else ''}]"
             table_list.append(this_row)
             this_row = {}
     return table_list
 
 
-def main(asdir: str, outpath: str, contig: bool = False, hybrid: bool = False):
+def main(asdir: str, outpath: str, contig: bool = False, split_hybrid: bool = False):
     by_genome = {}
+    descriptions = {}
 
     jsons = Path(asdir).glob("*/*.json")
     for path in jsons:
-        genome, types = parse_json(path)
+        genome, types, description = parse_json(path)
         by_genome[genome] = types
+        descriptions[genome] = description
 
-    table_list = tabulate(by_genome, contig, hybrid)
+    table_list = tabulate(by_genome, descriptions, contig, split_hybrid)
     all_products = set().union(*(d.keys() for d in table_list))
-    all_products.difference_update({"record", "total_count"})
+    all_products.difference_update({"record", "total_count", "hybrid", "description"})
     fieldnames = ["record", "total_count"] + sorted(all_products)
+    if not split_hybrid:
+        fieldnames.append("hybrid")
+    fieldnames.append("description")
 
     with open(outpath, 'w') as outf:
+        outf.write("# If you find multiSMASH useful, please cite the Zenodo DOI: 10.5281/zenodo.8276143\n")
+
         writer = csv.DictWriter(outf, fieldnames=fieldnames,
                                 delimiter='\t', restval=0)
         writer.writeheader()
@@ -73,8 +85,7 @@ if __name__ == "__main__":
                         help="count regions per each individual contig rather than per assembly")
     parser.add_argument("--split_hybrids", action="store_true",
                         help="count each hybrid region multiple times, once for each "
-                             "constituent BGC class. Caution: this flag artificially "
-                             "inflates total BGC counts")
+                             "constituent BGC class. The total_count column is unaffected.")
 
     args = parser.parse_args()
 
