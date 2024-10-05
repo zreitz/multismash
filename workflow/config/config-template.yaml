@@ -31,6 +31,7 @@ snakemake_flags:
 ## sequence, --output-dir, --cpus, and --logfile are set automatically
 antismash_flags:
   --minimal
+  --cb-knownclusters
   #--genefinding-tool none
   #--no-abort-on-invalid-records
 
