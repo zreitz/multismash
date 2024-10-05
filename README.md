@@ -205,7 +205,7 @@ options:
   -h, --help  show this help message and exit
   --by_contig      count regions per each individual contig rather than per assembly
   --split_hybrids  count each hybrid region multiple times, once for each constituent 
-                   BGC class. Caution: this flag artificially inflates total BGC counts
+                   BGC class. The total_count column is unaffected.
 ```
 
 
