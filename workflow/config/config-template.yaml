@@ -60,9 +60,9 @@ split_hybrids: False
 bigscape_flags:
   # --mibig
   --mix
-  --no_classify 
-  --include_singletons 
-  --clans-off 
+  --no_classify
+  --include_singletons
+  --clans-off
   --cutoffs 0.5
   ## [--inputdir], [--outputdir], [--pfam-dir] and [--cores] are set automatically
 

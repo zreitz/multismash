@@ -1,17 +1,18 @@
 ## Given a bunch of antismash results, count the BGC regions
 ## Usage:
 ##      python count_regions.py -h
+from __future__ import annotations
 
-import csv
-from pathlib import Path
-import json
 import argparse
+import csv
+import json
+from pathlib import Path
 
 
 def parse_json(path):
     by_contig = {}
     descriptions = {}
-    with open(str(path), 'r') as f:
+    with Path.open(str(path)) as f:
         data = json.load(f)
     for record in data["records"]:
         products = [a["products"] for a in record["areas"]]
@@ -39,9 +40,11 @@ def tabulate(type_dict, descriptions, contig=False, split_hybrids=False):
                 this_row = {}
         if not contig:
             this_row["record"] = genome
-            this_row["total_count"] = sum((len(regions) for regions in g_prods.values()))
-            this_row["description"] = f"{descriptions[genome][next(iter(g_prods))]}" \
+            this_row["total_count"] = sum(len(regions) for regions in g_prods.values())
+            this_row["description"] = (
+                f"{descriptions[genome][next(iter(g_prods))]}"
                 f" [{len(g_prods)} total record{'s' if len(g_prods) > 1 else ''}]"
+            )
             table_list.append(this_row)
             this_row = {}
     return table_list
@@ -60,32 +63,43 @@ def main(asdir: str, outpath: str, contig: bool = False, split_hybrid: bool = Fa
     table_list = tabulate(by_genome, descriptions, contig, split_hybrid)
     all_products = set().union(*(d.keys() for d in table_list))
     all_products.difference_update({"record", "total_count", "hybrid", "description"})
-    fieldnames = ["record", "total_count"] + sorted(all_products)
+    fieldnames = ["record", "total_count", *sorted(all_products)]
     if not split_hybrid:
         fieldnames.append("hybrid")
     fieldnames.append("description")
 
-    with open(outpath, 'w') as outf:
-        outf.write("# If you find multiSMASH useful, please cite the Zenodo DOI: 10.5281/zenodo.8276143\n")
+    with Path.open(outpath, "w") as outf:
+        outf.write(
+            "# If you find multiSMASH useful, please cite the Zenodo DOI: 10.5281/zenodo.8276143\n"
+        )
 
-        writer = csv.DictWriter(outf, fieldnames=fieldnames,
-                                delimiter='\t', restval=0)
+        writer = csv.DictWriter(outf, fieldnames=fieldnames, delimiter="\t", restval=0)
         writer.writeheader()
         writer.writerows(table_list)
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Given a bunch of antismash results, count the BGC regions")
+    parser = argparse.ArgumentParser(
+        description="Given a bunch of antismash results, count the BGC regions"
+    )
 
-    parser.add_argument("asdir", type=str,
-                        help="directory containing antiSMASH directories")
-    parser.add_argument("outpath", type=str,
-                        help="desired path+name for the output TSV")
-    parser.add_argument("--by_contig", action="store_true",
-                        help="count regions per each individual contig rather than per assembly")
-    parser.add_argument("--split_hybrids", action="store_true",
-                        help="count each hybrid region multiple times, once for each "
-                             "constituent BGC class. The total_count column is unaffected.")
+    parser.add_argument(
+        "asdir", type=str, help="directory containing antiSMASH directories"
+    )
+    parser.add_argument(
+        "outpath", type=str, help="desired path+name for the output TSV"
+    )
+    parser.add_argument(
+        "--by_contig",
+        action="store_true",
+        help="count regions per each individual contig rather than per assembly",
+    )
+    parser.add_argument(
+        "--split_hybrids",
+        action="store_true",
+        help="count each hybrid region multiple times, once for each "
+        "constituent BGC class. The total_count column is unaffected.",
+    )
 
     args = parser.parse_args()
 
