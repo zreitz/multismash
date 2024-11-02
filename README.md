@@ -194,20 +194,20 @@ options:
 
 Example TSV output: (prettified)
 ```
-|file            |record_id   |region|start   |end     |contig_edge|product                         |KCB_hit        |KCB_acc    |KCB_%|record_desc                                                             |
-|----------------|------------|------|--------|--------|-----------|--------------------------------|---------------|-----------|-----|------------------------------------------------------------------------|
-|GCF_000008865.2 |NC_002695   |1     |675813  |730768  |False      |NRP-metallophore / NRPS         |enterobactin   |BGC0002476 |100  |Escherichia coli O157:H7 str. Sakai DNA, complete genome                |
-|GCF_000008865.2 |NC_002695   |2     |1069983 |1096276 |False      |thiopeptide                     |O-antigen      |BGC0000781 |14   |Escherichia coli O157:H7 str. Sakai DNA, complete genome                |
-|GCF_000008865.2 |NC_002695   |3     |1289425 |1299677 |False      |RiPP-like                       |               |           |     |Escherichia coli O157:H7 str. Sakai DNA, complete genome                |
-|GCF_000008865.2 |NC_002695   |4     |1338879 |1381438 |False      |arylpolyene                     |               |           |     |Escherichia coli O157:H7 str. Sakai DNA, complete genome                |
-|GCF_000008865.2 |NC_002695   |5     |4324109 |4367697 |False      |arylpolyene                     |APE Ec         |BGC0000836 |94   |Escherichia coli O157:H7 str. Sakai DNA, complete genome                |
-|GCF_000407825.1 |NZ_KE136672 |1     |210696  |236988  |False      |thiopeptide                     |O-antigen      |BGC0000781 |14   |Escherichia coli KTE19 acHaZ-supercont1.1, whole genome shotgun sequence|
-|GCF_000407825.1 |NZ_KE136672 |2     |378726  |422314  |False      |arylpolyene                     |aryl polyenes  |BGC0002008 |100  |Escherichia coli KTE19 acHaZ-supercont1.1, whole genome shotgun sequence|
-|GCF_000407825.1 |NZ_KE136674 |1     |7576    |19112   |True       |RiPP-like                       |microcin L     |BGC0000588 |18   |Escherichia coli KTE19 acHaZ-supercont1.3, whole genome shotgun sequence|
-|GCF_000407825.1 |NZ_KE136675 |1     |556378  |619578  |False      |NRP-metallophore / NRPS / T1PKS |yersiniabactin |BGC0001055 |30   |Escherichia coli KTE19 acHaZ-supercont1.4, whole genome shotgun sequence|
-|GCF_000407825.1 |NZ_KE136675 |2     |3924573 |3979528 |False      |NRP-metallophore / NRPS         |enterobactin   |BGC0002476 |100  |Escherichia coli KTE19 acHaZ-supercont1.4, whole genome shotgun sequence|
-|GCF_000005845.2 |NC_000913   |1     |594156  |649297  |False      |NRP-metallophore / NRPS         |enterobactin   |BGC0002476 |100  |Escherichia coli str. K-12 substr. MG1655, complete genome              |
-|GCF_000005845.2 |NC_000913   |2     |940339  |966632  |False      |thiopeptide                     |O-antigen      |BGC0000781 |14   |Escherichia coli str. K-12 substr. MG1655, complete genome              |
+|file            |record_id   |region|start   |end     |contig_edge|product                         |KCB_hit        |KCB_acc    |KCB_sim |record_desc                                                             |
+|----------------|------------|------|--------|--------|-----------|--------------------------------|---------------|-----------|--------|------------------------------------------------------------------------|
+|GCF_000008865.2 |NC_002695   |1     |675813  |730768  |False      |NRP-metallophore / NRPS         |enterobactin   |BGC0002476 |high    |Escherichia coli O157:H7 str. Sakai DNA, complete genome                |
+|GCF_000008865.2 |NC_002695   |2     |1069983 |1096276 |False      |thiopeptide                     |               |           |        |Escherichia coli O157:H7 str. Sakai DNA, complete genome                |
+|GCF_000008865.2 |NC_002695   |3     |1289425 |1299677 |False      |RiPP-like                       |               |           |        |Escherichia coli O157:H7 str. Sakai DNA, complete genome                |
+|GCF_000008865.2 |NC_002695   |4     |1338879 |1381438 |False      |arylpolyene                     |               |           |        |Escherichia coli O157:H7 str. Sakai DNA, complete genome                |
+|GCF_000008865.2 |NC_002695   |5     |4324109 |4367697 |False      |arylpolyene                     |APE Ec         |BGC0000836 |high    |Escherichia coli O157:H7 str. Sakai DNA, complete genome                |
+|GCF_000407825.1 |NZ_KE136672 |1     |210696  |236988  |False      |thiopeptide                     |               |           |        |Escherichia coli KTE19 acHaZ-supercont1.1, whole genome shotgun sequence|
+|GCF_000407825.1 |NZ_KE136672 |2     |378726  |422314  |False      |arylpolyene                     |aryl polyenes  |BGC0002008 |high    |Escherichia coli KTE19 acHaZ-supercont1.1, whole genome shotgun sequence|
+|GCF_000407825.1 |NZ_KE136674 |1     |7576    |19112   |True       |RiPP-like                       |microcin L     |BGC0000588 |low     |Escherichia coli KTE19 acHaZ-supercont1.3, whole genome shotgun sequence|
+|GCF_000407825.1 |NZ_KE136675 |1     |556378  |619578  |False      |NRP-metallophore / NRPS / T1PKS |yersiniabactin |BGC0001055 |low     |Escherichia coli KTE19 acHaZ-supercont1.4, whole genome shotgun sequence|
+|GCF_000407825.1 |NZ_KE136675 |2     |3924573 |3979528 |False      |NRP-metallophore / NRPS         |enterobactin   |BGC0002476 |high    |Escherichia coli KTE19 acHaZ-supercont1.4, whole genome shotgun sequence|
+|GCF_000005845.2 |NC_000913   |1     |594156  |649297  |False      |NRP-metallophore / NRPS         |enterobactin   |BGC0002476 |high    |Escherichia coli str. K-12 substr. MG1655, complete genome              |
+|GCF_000005845.2 |NC_000913   |2     |940339  |966632  |False      |thiopeptide                     |               |           |        |Escherichia coli str. K-12 substr. MG1655, complete genome              |
 ```
 
 ### count_regions.py

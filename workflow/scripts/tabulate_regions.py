@@ -35,15 +35,20 @@ def parse_json(path):
                 "product":      " / ".join(region["qualifiers"]["product"]),
                 "record_desc":  record["description"]
             }
-            kcb_dict = {"KCB_hit": "", "KCB_acc": "", "KCB_%": ""}
+            kcb_dict = {"KCB_hit": "", "KCB_acc": "", "KCB_sim": ""}
             if knownblast:
                 hits = knownblast[i]["ranking"]
                 if hits:
-                    kcb_dict = {
-                        "KCB_hit": hits[0][0]["description"],
-                        "KCB_acc":  hits[0][0]["accession"],
-                        "KCB_%":  hits[0][1]["similarity"]
-                    }
+                    sim = hits[0][1]["similarity"]
+                    if sim > 15:
+                        if sim > 75: sim = "high"
+                        elif sim > 50: sim = "medium"
+                        else: sim = "low"
+                        kcb_dict = {
+                            "KCB_hit": hits[0][0]["description"],
+                            "KCB_acc": hits[0][0]["accession"],
+                            "KCB_sim": sim
+                        }
             region_dict.update(kcb_dict)
             result_list.append(region_dict)
     return result_list
@@ -59,7 +64,7 @@ def main(asdir, outpath):
     fieldnames = ["file", "record_id", "region",
                   "start", "end", "contig_edge",
                   "product",
-                  "KCB_hit", "KCB_acc", "KCB_%",
+                  "KCB_hit", "KCB_acc", "KCB_sim",
                   "record_desc"]
     with open(outpath, 'w') as outf:
         writer = csv.DictWriter(outf, fieldnames=fieldnames, delimiter="\t")

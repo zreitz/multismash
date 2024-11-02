@@ -1,15 +1,117 @@
-import unittest
-from multismash.workflow.scripts.tabulate_regions import *
+# Mostly written by ChatGPT
 
+import unittest
+from unittest.mock import patch, mock_open
+from io import StringIO
 import json
 from pathlib import Path
+from ..tabulate_regions import parse_json
 
-with open("workflow/scripts/test/fake_antismash/GCF_000407825_parsed.json") as inf:
-    parsed_good = json.load(inf)
+class TestParseJson(unittest.TestCase):
+    
+    def setUp(self):
+        # Sample JSON data that mimics antiSMASH results
+        self.sample_json = {
+            "records": [
+                {
+                    "name": "record1",
+                    "description": "Sample description",
+                    "areas": [1],
+                    "features": [
+                        {
+                            "type": "region",
+                            "location": "100..500",
+                            "qualifiers": {
+                                "region_number": ["1"],
+                                "contig_edge": ["True"],
+                                "product": ["Polyketide"]
+                            }
+                        }
+                    ],
+                    "modules": {
+                        "antismash.modules.clusterblast": {
+                            "knowncluster": {
+                                "results": [
+                                    {
+                                        "ranking": [
+                                            [
+                                                {"description": "similar cluster", "accession": "ABC123"},
+                                                {"similarity": 80}
+                                            ]
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+        self.expected_output = [
+            {
+                "file": "sample",
+                "record_id": "record1",
+                "region": "1",
+                "start": "100",
+                "end": "500",
+                "contig_edge": "True",
+                "product": "Polyketide",
+                "record_desc": "Sample description",
+                "KCB_hit": "similar cluster",
+                "KCB_acc": "ABC123",
+                "KCB_sim": "high"
+            }
+        ]
+    
+    @patch("builtins.open", new_callable=mock_open)
+    def test_parse_json_with_knownclusterblast(self, mock_open):
+        # Mock the file content and path
+        mock_open.return_value = StringIO(json.dumps(self.sample_json))
+        path = Path("sample.json")
+        
+        # Call parse_json and check the result
+        result = parse_json(path)
+        self.assertEqual(result, self.expected_output)
 
-class TestTabulate(unittest.TestCase):
-    def test_parse(self):
-        path = "workflow/scripts/test/fake_antismash/GCF_000407825_minimal.json"
-        parsed = parse_json(Path(path))
-        assert(parsed == parsed_good)
+    @patch("builtins.open", new_callable=mock_open)
+    def test_parse_json_no_knownclusterblast(self, mock_open):
+        # Remove knownclusterblast section from sample JSON
+        self.sample_json["records"][0]["modules"] = {}
+        self.expected_output[0].update({"KCB_hit": "", "KCB_acc": "", "KCB_sim": ""})
+        
+        # Mock the file content and path
+        mock_open.return_value = StringIO(json.dumps(self.sample_json))
+        path = Path("sample.json")
+        
+        # Call parse_json and check the result
+        result = parse_json(path)
+        self.assertEqual(result, self.expected_output)
 
+    @patch("builtins.open", new_callable=mock_open)
+    def test_parse_json_no_areas(self, mock_open):
+        # Set areas to an empty list to test area filtering
+        self.sample_json["records"][0]["areas"] = []
+        
+        # Mock the file content and path
+        mock_open.return_value = StringIO(json.dumps(self.sample_json))
+        path = Path("sample.json")
+        
+        # Call parse_json and check the result is empty due to no areas
+        result = parse_json(path)
+        self.assertEqual(result, [])
+
+    @patch("builtins.open", new_callable=mock_open)
+    def test_parse_json_no_region_features(self, mock_open):
+        # Set features to an empty list to simulate no regions
+        self.sample_json["records"][0]["features"] = []
+        
+        # Mock the file content and path
+        mock_open.return_value = StringIO(json.dumps(self.sample_json))
+        path = Path("sample.json")
+        
+        # Call parse_json and check the result is empty due to no region features
+        result = parse_json(path)
+        self.assertEqual(result, [])
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,65 +1,154 @@
+# Mostly written by ChatGPT
+
 import unittest
-from multismash.workflow.scripts.count_regions import *
+from unittest.mock import patch, mock_open
+from io import StringIO
+import json
+from pathlib import Path
+from ..count_regions import parse_json, tabulate
 
+unittest.util._MAX_LENGTH=2000
 
-parsed0 = ("has0",
-           {"contig1": [],
-            "contig2": []})
-parsed3 = ("has3",
-           {"contig1": [["NRPS", "PKS"], ["NRPS"], ["PKS"]]})
-parsed4 = ("has4",
-           {"contig1": [["terpene"], ["terpene"]],
-            "contig2": [["terpene"], ["terpene"]]})
+class TestCountRegions(unittest.TestCase):
 
-type_dict = {k: v for k, v in (parsed0, parsed3, parsed4)}
+    def setUp(self):
+        # Sample JSON data to mimic antiSMASH results for `parse_json`
+        self.sample_json = {
+            "input_file": "genome1",
+            "records": [
+                {
+                    "name": "contig1",
+                    "description": "Test description 1",
+                    "areas": [
+                        {"products": ["Type I PKS"]},
+                        {"products": ["NRPS", "Type II PKS"]}
+                    ]
+                },
+                {
+                    "name": "contig2",
+                    "description": "Test description 2",
+                    "areas": [
+                        {"products": ["Terpene"]},
+                        {"products": ["Type I PKS"]}
+                    ]
+                }
+            ]
+        }
+        self.expected_parse_json_output = (
+            "genome1",
+            {
+                "contig1": [["Type I PKS"], ["NRPS", "Type II PKS"]],
+                "contig2": [["Terpene"], ["Type I PKS"]]
+            },
+            {
+                "contig1": "Test description 1",
+                "contig2": "Test description 2"
+            }
+        )
 
+    @patch("builtins.open", new_callable=mock_open)
+    def test_parse_json(self, mock_open):
+        # Mock file content and path
+        mock_open.return_value = StringIO(json.dumps(self.sample_json))
+        path = Path("genome1.json")
 
-class TestCount(unittest.TestCase):
-    def test_parse0(self):
-        path = "workflow/scripts/test/fake_antismash/has0/has0.json"
-        parsed = parse_json(path)
-        assert(parsed == parsed0)
+        # Test parse_json function
+        result = parse_json(path)
+        self.assertEqual(result, self.expected_parse_json_output)
 
-
-    def test_parse3(self):
-        path = "workflow/scripts/test/fake_antismash/has3/has3.json"
-        parsed = parse_json(path)
-        assert(parsed == parsed3)
-
-
-    def test_parse4(self):
-        path = "workflow/scripts/test/fake_antismash/has4/has4.json"
-        parsed = parse_json(path)
-        assert(parsed == parsed4)
-
-
-    def test_tabulate_default(self):
-        lst = tabulate(type_dict)
-        good = [
-            {"record": "has0", "total_count": 0},
-            {"record": "has3", "total_count": 3, 'NRPS': 1, 'PKS': 1, 'hybrid': 1},
-            {"record": "has4", "total_count": 4, 'terpene': 4}
+    def test_tabulate_contig_false(self):
+        # Data for `tabulate` function with `contig=False`
+        type_dict = {
+            "genome1": {
+                "contig1": [["Type I PKS"], ["NRPS", "Type II PKS"]],
+                "contig2": [["Terpene"], ["Type I PKS"]]
+            }
+        }
+        descriptions = {
+            "genome1": {
+                "contig1": "Test description 1",
+                "contig2": "Test description 2"
+            }
+        }
+        expected_output = [
+            {
+                "record": "genome1",
+                "hybrid": 1,
+                "Type I PKS": 2,
+                "Terpene": 1,
+                "total_count": 4,
+                "description": "Test description 1 [2 total records]"
+            }
         ]
-        assert(lst == good)
 
+        # Test tabulate function with contig=False
+        result = tabulate(type_dict, descriptions, contig=False, split_hybrids=False)
+        self.assertEqual(result, expected_output)
 
-    def test_tabulate_contig(self):
-        lst = tabulate(type_dict, contig=True)
-        good = [
-            {"record": "has0|contig1", "total_count": 0},
-            {"record": "has0|contig2", "total_count": 0},
-            {"record": "has3|contig1", "total_count": 3, 'NRPS': 1, 'PKS': 1, 'hybrid': 1},
-            {"record": "has4|contig1", "total_count": 2, 'terpene': 2},
-            {"record": "has4|contig2", "total_count": 2, 'terpene': 2}
+    def test_tabulate_contig_true(self):
+        # Data for `tabulate` function with `contig=True`
+        type_dict = {
+            "genome1": {
+                "contig1": [["Type I PKS"], ["NRPS", "Type II PKS"]],
+                "contig2": [["Terpene"], ["Type I PKS"]]
+            }
+        }
+        descriptions = {
+            "genome1": {
+                "contig1": "Test description 1",
+                "contig2": "Test description 2"
+            }
+        }
+        expected_output = [
+            {
+                "record": "genome1|contig1",
+                "Type I PKS": 1,
+                "hybrid": 1,
+                "total_count": 2,
+                "description": "Test description 1"
+            },
+            {
+                "record": "genome1|contig2",
+                "Type I PKS": 1,
+                "Terpene": 1,
+                "total_count": 2,
+                "description": "Test description 2"
+            }
         ]
-        assert(lst == good)
 
+        # Test tabulate function with contig=True
+        result = tabulate(type_dict, descriptions, contig=True, split_hybrids=False)
+        self.assertEqual(result, expected_output)
 
-    def test_tabulate_hybrid(self):
-        lst = tabulate(type_dict, split_hybrids=True)
-        good = [
-            {"record": "has0", "total_count": 0},
-            {"record": "has3", "total_count": 3, 'NRPS': 2, 'PKS': 2},
-            {"record": "has4", "total_count": 4, 'terpene': 4}
+    def test_tabulate_split_hybrids(self):
+        # Data for `tabulate` function with `split_hybrids=True`
+        type_dict = {
+            "genome1": {
+                "contig1": [["Type I PKS"], ["NRPS", "Type II PKS"]],
+                "contig2": [["Terpene"], ["Type I PKS"]]
+            }
+        }
+        descriptions = {
+            "genome1": {
+                "contig1": "Test description 1",
+                "contig2": "Test description 2"
+            }
+        }
+        expected_output = [
+            {
+                "record": "genome1",
+                "Type I PKS": 2,
+                "NRPS": 1,
+                "Type II PKS": 1,
+                "Terpene": 1,
+                "total_count": 4,
+                "description": "Test description 1 [2 total records]"
+            }
         ]
-        assert(lst == good)
+
+        # Test tabulate function with split_hybrids=True
+        result = tabulate(type_dict, descriptions, contig=False, split_hybrids=True)
+        self.assertEqual(result, expected_output)
+
+if __name__ == "__main__":
+    unittest.main()
