@@ -4,6 +4,8 @@ import argparse
 import shutil
 from pathlib import Path
 
+from snakemake.logging import logger
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -41,7 +43,7 @@ def main():
     destination_dir.mkdir(parents=True, exist_ok=True)
 
     shutil.copyfile(source_path, destination_path)
-    print(f"Config file copied to {args.destination}")
+    logger.info(f"Config file copied to {args.destination}")
 
 
 if __name__ == "__main__":

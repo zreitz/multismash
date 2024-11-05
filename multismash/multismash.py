@@ -6,6 +6,7 @@ import textwrap
 from pathlib import Path
 
 import yaml
+from snakemake.logging import logger
 from snakemake.utils import validate
 
 
@@ -89,7 +90,7 @@ def main():
         args.append(configs["snakemake_flags"])
     args.extend(snakemake_args)
 
-    print(f"Running multiSMASH with {configs['cores']} cores")
+    logger.info(f"Running multiSMASH with {configs['cores']} cores")
     subprocess.run(args, check=False)
 
 
