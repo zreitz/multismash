@@ -12,7 +12,7 @@ from pathlib import Path
 def parse_json(path):
     by_contig = {}
     descriptions = {}
-    with Path.open(str(path)) as f:
+    with Path.open(path) as f:
         data = json.load(f)
     for record in data["records"]:
         products = [a["products"] for a in record["areas"]]
@@ -54,7 +54,7 @@ def main(asdir: str, outpath: str, contig: bool = False, split_hybrid: bool = Fa
     by_genome = {}
     descriptions = {}
 
-    jsons = Path(asdir).glob("*/*.json")
+    jsons = asdir.glob("*/*.json")
     for path in jsons:
         genome, types, description = parse_json(path)
         by_genome[genome] = types
@@ -84,10 +84,10 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "asdir", type=str, help="directory containing antiSMASH directories"
+        "asdir", type=Path, help="directory containing antiSMASH directories"
     )
     parser.add_argument(
-        "outpath", type=str, help="desired path+name for the output TSV"
+        "outpath", type=Path, help="desired path+name for the output TSV"
     )
     parser.add_argument(
         "--by_contig",

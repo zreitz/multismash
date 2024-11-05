@@ -17,7 +17,7 @@ def parse_args() -> argparse.Namespace:
 
     parser.add_argument(
         "destination",
-        type=str,
+        type=Path,
         nargs="?",
         default="config.yaml",
         help="Default path: config.yaml",
@@ -28,7 +28,7 @@ def parse_args() -> argparse.Namespace:
 
 def main():
     args = parse_args()
-    destination_path = Path(args.destination).resolve()
+    destination_path = args.destination.resolve()
 
     source_path = (
         Path(__file__).resolve().parent.parent

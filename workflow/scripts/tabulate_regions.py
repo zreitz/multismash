@@ -12,7 +12,7 @@ from pathlib import Path
 
 def parse_json(path):
     result_list = []
-    with Path.open(str(path)) as f:
+    with Path.open(path) as f:
         data = json.load(f)
     for record in data["records"]:
         if not record["areas"]:
@@ -62,7 +62,7 @@ def parse_json(path):
 def main(asdir, outpath):
     record_infos = []
 
-    jsons = Path(asdir).glob("*/*.json")
+    jsons = asdir.glob("*/*.json")
     for path in jsons:
         record_infos.extend(parse_json(path))
 
@@ -91,10 +91,10 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "asdir", type=str, help="directory containing antiSMASH directories"
+        "asdir", type=Path, help="directory containing antiSMASH directories"
     )
     parser.add_argument(
-        "outpath", type=str, help="desired path+name for the output TSV"
+        "outpath", type=Path, help="desired path+name for the output TSV"
     )
 
     args = parser.parse_args()

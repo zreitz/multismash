@@ -27,7 +27,7 @@ def parse_args() -> tuple[argparse.Namespace, list[str]]:
     )
 
     parser.add_argument(
-        "configfile", type=str, help="path to the YAML file with job configurations"
+        "configfile", type=Path, help="path to the YAML file with job configurations"
     )
 
     return parser.parse_known_args()
