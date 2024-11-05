@@ -71,23 +71,30 @@ def main():
     # Get Snakefile relative to this file
     snakefile = multismash_dir.joinpath("workflow", "Snakefile")
 
-    # Always install conda envs in the same location
-    conda_dir = multismash_dir.joinpath("conda")
-
     args = [
         "snakemake",
         "--snakefile",
-        snakefile,
+        str(snakefile),
         "--cores",
         str(configs["cores"]),
-        "--use-conda",
         "--configfile",
-        args.configfile,
-        "--conda-prefix",
-        conda_dir,
+        str(args.configfile),
     ]
     if configs["snakemake_flags"]:
         args.append(configs["snakemake_flags"])
+
+    # Only set conda flags if it's needed
+    if any((configs["run_bigscape"], configs["antismash_conda_env_name"])):
+        # Destination for conda installs
+        conda_dir = multismash_dir.joinpath("conda")
+        conda_args = [
+            "--use-conda",
+            "--conda-prefix",
+            str(conda_dir),
+        ]
+        args.extend(conda_args)
+
+    # Any other arguments are assumed to be for snakemake
     args.extend(snakemake_args)
 
     logger.info(f"Running multiSMASH with {configs['cores']} cores")
