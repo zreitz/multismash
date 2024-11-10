@@ -28,6 +28,12 @@ app = typer.Typer(
     cls=OrderCommands,
 )
 
+typer.rich_utils.STYLE_REQUIRED_LONG = "red"
+typer.rich_utils.STYLE_OPTIONS_PANEL_BORDER = ""
+typer.rich_utils.STYLE_COMMANDS_PANEL_BORDER = ""
+typer.rich_utils.STYLE_ERRORS_SUGGESTION = ""
+typer.rich_utils.STYLE_HELPTEXT = ""
+
 
 def version_callback(version: bool):
     if version:
@@ -35,7 +41,7 @@ def version_callback(version: bool):
         raise typer.Exit()
 
 
-@app.callback()
+@app.callback(epilog="See `multismash [command] -h` for more details")
 def common(
     version: bool = typer.Option(
         None,
@@ -49,9 +55,6 @@ def common(
 
 
 # appeasing ruff while avoiding the metavar bug in typer
-config_default = typer.Argument(
-    "config.yaml", metavar="CONFIG", help="YAML file with job configurations"
-)
 unknown_default = typer.Option(None)
 
 
@@ -65,11 +68,21 @@ unknown_default = typer.Option(None)
             --forceall, -F  Force the (re-)execution of all rules""",
 )
 def run(
-    config: Path = config_default,
+    config: Annotated[
+        Path,
+        typer.Argument(
+            show_default=False,
+            help="YAML file with job configurations",
+            exists=True,
+            readable=True,
+        ),
+    ],
     unknown_args: typer.Context = unknown_default,
 ):
     """
     Run a Snakemake-based workflow according to a configuration file
+
+    A template config file can be created with `multismash init`
     """
     multismash.workflow.main(config, unknown_args.args)
 
