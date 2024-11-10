@@ -1,0 +1,6 @@
+file	record_id	region	start	end	contig_edge	product	KCB_hit	KCB_acc	KCB_sim	record_desc
+has	NZ_KE136672	1	210696	236988	False	thiopeptide	fakeochelin	BGC0000000	high	NZ_KE136672
+has	NZ_KE136672	2	7576	19112	True	RiPP-like				NZ_KE136672
+has	NZ_KE136674	1	556378	619578	False	NRP-metallophore / NRPS / T1PKS				NZ_KE136674
+has	NZ_KE136675	1	556378	619578	False	NRP-metallophore / NRPS / T1PKS	yersiniabactin	BGC0001055	low	NZ_KE136675
+has	NZ_KE136675	2	556378	619578	False	NRP-metallophore / NRPS / T1PKS	fakeochelin	BGC0000000	medium	NZ_KE136675

@@ -1,9 +1,5 @@
-## Given a bunch of antismash results, tabulate BGC regions
-## Usage:
-##      python tabulate_regions.py -h
 from __future__ import annotations
 
-import argparse
 import csv
 import json
 import re
@@ -12,7 +8,7 @@ from pathlib import Path
 
 def parse_json(path):
     result_list = []
-    with Path.open(path) as f:
+    with Path.open(path, "r") as f:
         data = json.load(f)
     for record in data["records"]:
         if not record["areas"]:
@@ -83,20 +79,3 @@ def main(asdir, outpath):
         writer = csv.DictWriter(outf, fieldnames=fieldnames, delimiter="\t")
         writer.writeheader()
         writer.writerows(record_infos)
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Given a bunch of antismash results, tabulate BGC regions"
-    )
-
-    parser.add_argument(
-        "asdir", type=Path, help="directory containing antiSMASH directories"
-    )
-    parser.add_argument(
-        "outpath", type=Path, help="desired path+name for the output TSV"
-    )
-
-    args = parser.parse_args()
-
-    main(args.asdir, args.outpath)

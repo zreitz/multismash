@@ -8,3 +8,4 @@ multismash/multiSMASH.egg-info
 pfam/
 
 *.pyc
+.coverage

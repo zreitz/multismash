@@ -1,0 +1,67 @@
+[
+    {
+        "file": "has",
+        "record_id": "NZ_KE136672",
+        "region": "1",
+        "start": "210696",
+        "end": "236988",
+        "contig_edge": "False",
+        "product": "thiopeptide",
+        "record_desc": "NZ_KE136672",
+        "KCB_hit": "fakeochelin",
+        "KCB_acc": "BGC0000000",
+        "KCB_sim": "high"
+    },
+    {
+        "file": "has",
+        "record_id": "NZ_KE136672",
+        "region": "2",
+        "start": "7576",
+        "end": "19112",
+        "contig_edge": "True",
+        "product": "RiPP-like",
+        "record_desc": "NZ_KE136672",
+        "KCB_hit": "",
+        "KCB_acc": "",
+        "KCB_sim": ""
+    },
+    {
+        "file": "has",
+        "record_id": "NZ_KE136674",
+        "region": "1",
+        "start": "556378",
+        "end": "619578",
+        "contig_edge": "False",
+        "product": "NRP-metallophore / NRPS / T1PKS",
+        "record_desc": "NZ_KE136674",
+        "KCB_hit": "",
+        "KCB_acc": "",
+        "KCB_sim": ""
+    },
+    {
+        "file": "has",
+        "record_id": "NZ_KE136675",
+        "region": "1",
+        "start": "556378",
+        "end": "619578",
+        "contig_edge": "False",
+        "product": "NRP-metallophore / NRPS / T1PKS",
+        "record_desc": "NZ_KE136675",
+        "KCB_hit": "yersiniabactin",
+        "KCB_acc": "BGC0001055",
+        "KCB_sim": "low"
+    },
+    {
+        "file": "has",
+        "record_id": "NZ_KE136675",
+        "region": "2",
+        "start": "556378",
+        "end": "619578",
+        "contig_edge": "False",
+        "product": "NRP-metallophore / NRPS / T1PKS",
+        "record_desc": "NZ_KE136675",
+        "KCB_hit": "fakeochelin",
+        "KCB_acc": "BGC0000000",
+        "KCB_sim": "medium"
+    }
+]

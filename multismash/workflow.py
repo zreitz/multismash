@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-import argparse
 import subprocess
-import textwrap
 from pathlib import Path
 
 import yaml
@@ -10,33 +8,7 @@ from snakemake.logging import logger
 from snakemake.utils import validate
 
 
-def parse_args() -> tuple[argparse.Namespace, list[str]]:
-    parser = argparse.ArgumentParser(
-        prog="multismash",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        usage="%(prog)s [-h] configfile [--cores CORES] [...]",
-        description=textwrap.dedent("""\
-            multiSMASH is a Snakemake-based antiSMASH wrapper that streamlines
-            large-scale analyses of BGCs across multiple genomes."""),
-        epilog=textwrap.dedent("""\
-            Any additional arguments will be passed to Snakemake. Use `snakemake -h`
-            to see all available parameters. Flags you may find useful:
-              --dry-run, -n   Do not execute anything, and display what would be done
-              --quiet, -q     Do not output any progress or rule information
-              --forceall, -F  Force the (re-)execution of all rules
-            """),
-    )
-
-    parser.add_argument(
-        "configfile", type=Path, help="path to the YAML file with job configurations"
-    )
-
-    return parser.parse_known_args()
-
-
-def main():
-    args, snakemake_args = parse_args()
-
+def main(configfile: Path, snakemake_args: list[str]):
     # Catch problematic flags
     forbidden = {
         "--snakefile",
@@ -59,7 +31,7 @@ def main():
         )
         raise SystemExit(msg)
 
-    with Path.open(args.configfile) as yml:
+    with Path.open(configfile) as yml:
         configs = yaml.safe_load(yml)
 
     multismash_dir = Path(__file__).parents[1]
@@ -78,7 +50,7 @@ def main():
         "--cores",
         str(configs["cores"]),
         "--configfile",
-        str(args.configfile),
+        str(configfile),
     ]
     if configs["snakemake_flags"]:
         args.append(configs["snakemake_flags"])
@@ -99,7 +71,3 @@ def main():
 
     logger.info(f"Running multiSMASH with {configs['cores']} cores")
     subprocess.run(args, check=False)
-
-
-if __name__ == "__main__":
-    main()

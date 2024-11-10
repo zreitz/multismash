@@ -1,9 +1,6 @@
 ## Given a bunch of antismash results, count the BGC regions
-## Usage:
-##      python count_regions.py -h
 from __future__ import annotations
 
-import argparse
 import csv
 import json
 from pathlib import Path
@@ -21,7 +18,7 @@ def parse_json(path):
     return data["input_file"], by_contig, descriptions
 
 
-def tabulate(type_dict, descriptions, contig=False, split_hybrids=False):
+def build_table(type_dict, descriptions, contig=False, split_hybrids=False):
     table_list = []
     this_row = {}
     for genome, g_prods in type_dict.items():
@@ -60,7 +57,7 @@ def main(asdir: str, outpath: str, contig: bool = False, split_hybrid: bool = Fa
         by_genome[genome] = types
         descriptions[genome] = description
 
-    table_list = tabulate(by_genome, descriptions, contig, split_hybrid)
+    table_list = build_table(by_genome, descriptions, contig, split_hybrid)
     all_products = set().union(*(d.keys() for d in table_list))
     all_products.difference_update({"record", "total_count", "hybrid", "description"})
     fieldnames = ["record", "total_count", *sorted(all_products)]
@@ -76,31 +73,3 @@ def main(asdir: str, outpath: str, contig: bool = False, split_hybrid: bool = Fa
         writer = csv.DictWriter(outf, fieldnames=fieldnames, delimiter="\t", restval=0)
         writer.writeheader()
         writer.writerows(table_list)
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Given a bunch of antismash results, count the BGC regions"
-    )
-
-    parser.add_argument(
-        "asdir", type=Path, help="directory containing antiSMASH directories"
-    )
-    parser.add_argument(
-        "outpath", type=Path, help="desired path+name for the output TSV"
-    )
-    parser.add_argument(
-        "--by_contig",
-        action="store_true",
-        help="count regions per each individual contig rather than per assembly",
-    )
-    parser.add_argument(
-        "--split_hybrids",
-        action="store_true",
-        help="count each hybrid region multiple times, once for each "
-        "constituent BGC class. The total_count column is unaffected.",
-    )
-
-    args = parser.parse_args()
-
-    main(args.asdir, args.outpath, args.by_contig, args.split_hybrids)

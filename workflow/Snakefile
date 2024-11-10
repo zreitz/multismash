@@ -61,7 +61,7 @@ rule tabulate_regions:
         script = paths["TABULATE"],
         asdir = paths['AS_DIR']
     output: f"{paths['OUT_DIR']}/all_regions.tsv"
-    shell: "python {params.script} {params.asdir} {output}"
+    shell: "multismash tabulate {params.asdir} {output}"
 
 rule count_regions:
     input: expand(f"{paths['AS_DIR']}/{{genomes}}/{{genomes}}.gbk", genomes = GENOMES)
@@ -71,7 +71,7 @@ rule count_regions:
         contig = "--by_contig" if config["count_per_contig"] else "",
         hybrid = "--split_hybrids" if config["split_hybrids"] else ""
     output: f"{paths['OUT_DIR']}/region_counts.tsv"
-    shell: "python {params.script} {params.asdir} {output} {params.contig} {params.hybrid}"
+    shell: "multismash count {params.asdir} {output} {params.contig} {params.hybrid}"
 
 
 ## BiG-SCAPE rules

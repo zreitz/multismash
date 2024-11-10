@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "multiSMASH"
-version = "0.5.2"
+version = "0.6.0"
 description = "A snakemake-based antiSMASH wrapper for large-scale analyses"
 readme = "README.md"
 license = {file = "LICENSE.txt"}
@@ -18,8 +18,7 @@ dependencies = [
 ]
 
 [project.scripts]
-multismash = "multismash.multismash:main"
-multismash-config = "multismash.multismash_config:main"
+multismash = "multismash.entrypoint:app"
 
 [project.urls]
 Homepage = "https://github.com/zreitz/multismash"
