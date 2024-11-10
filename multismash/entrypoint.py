@@ -9,8 +9,8 @@ from snakemake import logging
 from typer.core import TyperGroup
 
 import multismash.copy_config
-import multismash.count_regions
-import multismash.tabulate_regions
+import multismash.count
+import multismash.overview
 import multismash.workflow
 
 
@@ -105,7 +105,7 @@ def init(
 
 
 @app.command()
-def tabulate(
+def overview(
     asdir: Annotated[
         Path,
         typer.Argument(show_default=False, help="Directory containing aS directories"),
@@ -118,7 +118,7 @@ def tabulate(
     """
     Generate a table of BGCs from a directory of aS results
     """
-    multismash.tabulate_regions.main(asdir, outpath)
+    multismash.overview.main(asdir, outpath)
 
 
 @app.command()
@@ -149,7 +149,7 @@ def count(
     """
     Generate a summary table of per-genome BGC counts from aS results
     """
-    multismash.count_regions.main(asdir, outpath, by_contig, split_hybrid)
+    multismash.count.main(asdir, outpath, by_contig, split_hybrid)
 
 
 if __name__ == "__main__":

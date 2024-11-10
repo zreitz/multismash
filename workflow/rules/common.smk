@@ -15,10 +15,6 @@ def build_paths():
     else:
         paths["AS_DIR"]  = paths["OUT_DIR"] / "antismash"
 
-    # Tabulation
-    paths["COUNT"] = Path(workflow.basedir) / "scripts" / "count_regions.py"
-    paths["TABULATE"] = Path(workflow.basedir) / "scripts" / "tabulate_regions.py"
-
     # Out directory for bigscape
     paths["BIG_DIR"] = paths["OUT_DIR"] / "bigscape"
     # Pfam directory for bigscape
@@ -97,7 +93,7 @@ def get_inputs_for_all(paths):
     inputs = []
     if config["run_tabulation"]:
         inputs.extend((
-            # tabulate_regions
+            # overview
             f"{out_dir}/all_regions.tsv",
             # count_regions
             f"{out_dir}/region_counts.tsv"

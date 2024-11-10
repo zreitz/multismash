@@ -55,18 +55,16 @@ rule run_antismash:
         fi
         """
 
-rule tabulate_regions:
+rule region_overview:
     input: expand(f"{paths['AS_DIR']}/{{genomes}}/{{genomes}}.gbk", genomes = GENOMES)
     params:
-        script = paths["TABULATE"],
         asdir = paths['AS_DIR']
     output: f"{paths['OUT_DIR']}/all_regions.tsv"
-    shell: "multismash tabulate {params.asdir} {output}"
+    shell: "multismash overview {params.asdir} {output}"
 
 rule count_regions:
     input: expand(f"{paths['AS_DIR']}/{{genomes}}/{{genomes}}.gbk", genomes = GENOMES)
     params:
-        script = paths["COUNT"],
         asdir = paths['AS_DIR'],
         contig = "--by_contig" if config["count_per_contig"] else "",
         hybrid = "--split_hybrids" if config["split_hybrids"] else ""

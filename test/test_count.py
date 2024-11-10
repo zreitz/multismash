@@ -4,7 +4,7 @@ from __future__ import annotations
 import unittest
 from pathlib import Path
 
-from ..multismash.count_regions import build_table, main, parse_json
+from ..multismash.count import build_table, main, parse_json
 
 unittest.util._MAX_LENGTH = 2000
 
