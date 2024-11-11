@@ -18,7 +18,7 @@ dependencies = [
 ]
 
 [project.scripts]
-multismash = "multismash.entrypoint:app"
+multismash = "multismash.__main__:app"
 
 [project.urls]
 Homepage = "https://github.com/zreitz/multismash"

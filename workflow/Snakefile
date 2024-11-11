@@ -55,14 +55,14 @@ rule run_antismash:
         fi
         """
 
-rule region_overview:
+rule report:
     input: expand(f"{paths['AS_DIR']}/{{genomes}}/{{genomes}}.gbk", genomes = GENOMES)
     params:
         asdir = paths['AS_DIR']
     output: f"{paths['OUT_DIR']}/all_regions.tsv"
-    shell: "multismash overview {params.asdir} {output}"
+    shell: "multismash report {params.asdir} {output}"
 
-rule count_regions:
+rule count:
     input: expand(f"{paths['AS_DIR']}/{{genomes}}/{{genomes}}.gbk", genomes = GENOMES)
     params:
         asdir = paths['AS_DIR'],

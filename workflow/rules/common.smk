@@ -93,7 +93,7 @@ def get_inputs_for_all(paths):
     inputs = []
     if config["run_tabulation"]:
         inputs.extend((
-            # overview
+            # report
             f"{out_dir}/all_regions.tsv",
             # count_regions
             f"{out_dir}/region_counts.tsv"

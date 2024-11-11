@@ -10,7 +10,7 @@ from typer.core import TyperGroup
 
 import multismash.copy_config
 import multismash.count
-import multismash.overview
+import multismash.report
 import multismash.workflow
 
 
@@ -99,7 +99,7 @@ dest_default = typer.Argument("config.yaml", metavar="DESTINATION", help="")
 
 
 @app.command()
-def init(
+def config(
     destination: Annotated[Path | None, None] = dest_default,
     _where: Annotated[
         bool | None,
@@ -118,7 +118,7 @@ def init(
 
 
 @app.command()
-def overview(
+def report(
     asdir: Annotated[
         Path,
         typer.Argument(show_default=False, help="Directory containing aS directories"),
@@ -131,7 +131,7 @@ def overview(
     """
     Generate a table of BGCs from a directory of aS results
     """
-    multismash.overview.main(asdir, outpath)
+    multismash.report.main(asdir, outpath)
 
 
 @app.command()

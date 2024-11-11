@@ -4,7 +4,7 @@ import json
 import unittest
 from pathlib import Path
 
-from ..multismash.overview import main, parse_json
+from ..multismash.report import main, parse_json
 
 unittest.util._MAX_LENGTH = 2000
 
