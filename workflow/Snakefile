@@ -84,7 +84,7 @@ if config["run_bigscape"]:
             outdir = paths['BIG_DIR'],
             bigscape_command = BIG_COMMAND,
             pfam_dir = BIG_PFAM,
-            bigscape_flags = config['bigscape_flags'],
+            bigscape_flags = config['bigscape_flags'] if config['bigscape_flags'] else "",
             cores = f"-c {config['cores']}" if isinstance(config['cores'], int) else ""
         output:
             f"{paths['BIG_DIR']}/index.html"
