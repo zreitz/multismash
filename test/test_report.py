@@ -13,7 +13,7 @@ def test_parse_json_has():
     path = Path(__file__).parent / "data" / "antismash" / "has" / "has.json"
     result = parse_json(path)
 
-    path = Path(__file__).parent / "data" / "gold_parsed.json"
+    path = Path(__file__).parent / "data" / "gold_parsed_has.json"
     with Path.open(path) as f:
         expected = json.load(f)
 
@@ -25,6 +25,16 @@ def test_parse_json_hasnt():
     result = parse_json(path)
 
     expected = []
+
+    assert result == expected
+
+def test_parse_json_circular():
+    path = Path(__file__).parent / "data" / "antismash" / "circular" / "circular.json"
+    result = parse_json(path)
+
+    path = Path(__file__).parent / "data" / "gold_parsed_circular.json"
+    with Path.open(path) as f:
+        expected = json.load(f)
 
     assert result == expected
 

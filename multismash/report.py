@@ -22,7 +22,9 @@ def parse_json(path):
         except (KeyError, TypeError, AttributeError):
             knownblast = None
         for i, region in enumerate(regions):
-            start, end = re.findall(r"\d+", region["location"])
+            # Handle origin-crossing regions with complex location
+            # by taking the first and last positions
+            start, *_, end = re.findall(r"\d+", region["location"])
             region_dict = {
                 "file": path.stem,
                 "record_id": record["name"],

@@ -1,4 +1,5 @@
 file	record_id	region	start	end	contig_edge	product	KCB_hit	KCB_acc	KCB_sim	record_desc
+circular	AY312585	1	53871	32009	False	NRPS				AY312585
 has	NZ_KE136672	1	210696	236988	False	thiopeptide	fakeochelin	BGC0000000	high	NZ_KE136672
 has	NZ_KE136672	2	7576	19112	True	RiPP-like				NZ_KE136672
 has	NZ_KE136674	1	556378	619578	False	NRP-metallophore / NRPS / T1PKS				NZ_KE136674

@@ -1,0 +1,34 @@
+{
+    "input_file": "circular",
+    "records": [
+      {
+        "name": "AY312585",
+        "description": "AY312585",
+        "areas":[{"start":53871,"end":32009,"products":["NRPS"],"protoclusters":{"0":{"category":"NRPS","start":53871,"end":32009,"core_start":8862,"core_end":12009,"product":"NRPS","tool":"rule-based-clusters"}},"candidates":[{"start":53871,"end":32009,"kind":"single","protoclusters":[0]}],"subregions":[]}],
+        "features": [
+           {
+            "location": "join{[53871:65009](+), [0:32009](+)}",
+            "type": "region",
+            "qualifiers": {
+              "candidate_cluster_numbers": [
+                "1"
+              ],
+              "contig_edge": [
+                "False"
+              ],
+              "product": [
+                "NRPS"
+              ],
+              "region_number": [
+                "1"
+              ],
+              "subregion_numbers": [],
+              "tool": [
+                "antismash"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }

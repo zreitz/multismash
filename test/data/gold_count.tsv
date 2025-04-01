@@ -1,4 +1,5 @@
 # If you find multiSMASH useful, please cite the Zenodo DOI: 10.5281/zenodo.8276143
-record	total_count	RiPP-like	arylpolyene	thiopeptide	hybrid	description
-GCF_000407825_adjusted	5	1	1	1	2	NZ_KE136672 [4 total records]
-GCF_nothing	0	0	0	0	0	no BGCs [1 total record]
+record	total_count	NRPS	RiPP-like	arylpolyene	thiopeptide	hybrid	description
+GCF_000407825_adjusted	5	0	1	1	1	2	NZ_KE136672 [4 total records]
+GCF_nothing	0	0	0	0	0	0	no BGCs [1 total record]
+circular	1	1	0	0	0	0	AY312585 [1 total record]
