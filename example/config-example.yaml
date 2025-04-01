@@ -1,7 +1,7 @@
 #------------------------<  Set these for every job  >------------------------#
 
 # Cores to use in parallel
-cores: 3                          # 'all' will use all available CPU cores
+cores: 1                          # 'all' will use all available CPU cores
 
 # Input directory containing the data
 in_dir: genbanks                  # Relative paths are relative to THIS file!
@@ -77,7 +77,7 @@ zip_bigscape: True
 
 ## Only set this if antiSMASH is in a different environment from multiSMASH
 antismash_conda_env_name:
-antismash_command: antismash       # Or maybe `python /path/to/run_antismash.py`
+antismash_command: echo       # Or maybe `python /path/to/run_antismash.py`
 
 # By default, a new BiG-SCAPE conda environment is automatically installed
 #   the first time multiSMASH is run with the flag [run_bigscape: True].

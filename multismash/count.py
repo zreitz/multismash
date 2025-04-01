@@ -44,6 +44,9 @@ def build_table(type_dict, descriptions, contig=False, split_hybrids=False):
             )
             table_list.append(this_row)
             this_row = {}
+    # Sort by record (to make my tests consistent)
+    table_list.sort(key=lambda x: x["record"])
+    
     return table_list
 
 
