@@ -54,14 +54,7 @@ def parse_json(path):
             result_list.append(region_dict)
     return result_list
 
-
-def main(asdir, outpath):
-    record_infos = []
-
-    jsons = asdir.glob("*/*.json")
-    for path in jsons:
-        record_infos.extend(parse_json(path))
-
+def write_table(record_infos, outpath):
     fieldnames = [
         "file",
         "record_id",
@@ -79,3 +72,17 @@ def main(asdir, outpath):
         writer = csv.DictWriter(outf, fieldnames=fieldnames, delimiter="\t")
         writer.writeheader()
         writer.writerows(record_infos)
+
+def main(asdir, outpath):
+    record_infos = []
+
+    jsons = asdir.glob("*/*.json")
+    for path in jsons:
+        record_infos.extend(parse_json(path))
+    
+    # Decreasing sort priority: file, record_id, region
+    record_infos = sorted(record_infos, key=lambda k: 
+                          (k["file"], k["record_id"], k["region"]))
+
+    write_table(record_infos, outpath)
+    
