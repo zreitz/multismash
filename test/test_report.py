@@ -4,7 +4,7 @@ import json
 import unittest
 from pathlib import Path
 
-from ..multismash.report import main, parse_json
+from ..multismash.report import OutputTypes, main, parse_json
 
 unittest.util._MAX_LENGTH = 2000
 
@@ -28,6 +28,7 @@ def test_parse_json_hasnt():
 
     assert result == expected
 
+
 def test_parse_json_circular():
     path = Path(__file__).parent / "data" / "antismash" / "circular" / "circular.json"
     result = parse_json(path)
@@ -39,12 +40,23 @@ def test_parse_json_circular():
     assert result == expected
 
 
-def test_parse_json(tmp_path):
-    gold = (Path(__file__).parent / "data" / "gold_tabulate.tsv").read_text()
+def test_write_tsv(tmp_path):
+    gold = (Path(__file__).parent / "data" / "gold_report_output.tsv").read_text()
 
     inpath = Path(__file__).parent / "data" / "antismash"
     outpath = tmp_path / "test_tabulate.tsv"
 
     main(inpath, outpath)
+
+    assert outpath.read_text() == gold
+
+
+def test_write_gff(tmp_path):
+    gold = (Path(__file__).parent / "data" / "gold_report_output.gff").read_text()
+
+    inpath = Path(__file__).parent / "data" / "antismash"
+    outpath = tmp_path / "test_tabulate.tsv"
+
+    main(inpath, outpath, format=OutputTypes.gff)
 
     assert outpath.read_text() == gold

@@ -3,6 +3,9 @@
     "records": [
       {
         "name": "AY312585",
+        "seq": {
+          "data": "GATACCA"
+        },
         "description": "AY312585",
         "areas":[{"start":53871,"end":32009,"products":["NRPS"],"protoclusters":{"0":{"category":"NRPS","start":53871,"end":32009,"core_start":8862,"core_end":12009,"product":"NRPS","tool":"rule-based-clusters"}},"candidates":[{"start":53871,"end":32009,"kind":"single","protoclusters":[0]}],"subregions":[]}],
         "features": [

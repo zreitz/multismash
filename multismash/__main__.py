@@ -125,13 +125,16 @@ def report(
     ],
     outpath: Annotated[
         Path,
-        typer.Argument(show_default=False, help="Location to write the output TSV"),
+        typer.Argument(show_default=False, help="Location to write the output file"),
     ],
+    format: Annotated[
+        multismash.report.OutputTypes, typer.Option("--format", case_sensitive=False)
+    ] = multismash.report.OutputTypes.tsv,
 ):
     """
-    Generate a table of BGCs from a directory of aS results
+    Generate a table of BGC regions from a directory of aS results
     """
-    multismash.report.main(asdir, outpath)
+    multismash.report.main(asdir, outpath, format)
 
 
 @app.command()

@@ -1,0 +1,7 @@
+##gff-version 3.1.26
+AY312585	antismash	region	53871	32016	.	.	.	ID=Region 1;Product=NRPS;
+NZ_KE136672	antismash	region	210696	236988	.	.	.	ID=Region 1;Product=thiopeptide;
+NZ_KE136672	antismash	region	7576	19112	.	.	.	ID=Region 2;Product=RiPP-like;
+NZ_KE136674	antismash	region	556378	619578	.	.	.	ID=Region 1;Product=NRP-metallophore / NRPS / T1PKS;
+NZ_KE136675	antismash	region	556378	619578	.	.	.	ID=Region 1;Product=NRP-metallophore / NRPS / T1PKS;
+NZ_KE136675	antismash	region	556378	619578	.	.	.	ID=Region 2;Product=NRP-metallophore / NRPS / T1PKS;

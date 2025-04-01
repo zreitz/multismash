@@ -3,6 +3,9 @@
     "records": [
       {
         "name": "NZ_nothing",
+        "seq": {
+          "data": "GATACCA"
+        },
         "description": "no BGCs",
         "areas": []
       }
