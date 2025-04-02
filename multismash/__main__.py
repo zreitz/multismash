@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import Annotated
 
 import typer
-from snakemake import logging
 from typer.core import TyperGroup
 
 import multismash.copy_config
@@ -37,7 +36,7 @@ typer.rich_utils.STYLE_HELPTEXT = ""
 
 def version_callback(version: bool):
     if version:
-        logging.logger(importlib.metadata.version("multiSMASH"))
+        print(importlib.metadata.version("multiSMASH"))  # noqa: T201
         raise typer.Exit()
 
 
@@ -90,7 +89,7 @@ def run(
 # init: make a config file
 def where_callback(where: bool):
     if where:
-        logging.logger(multismash.copy_config.get_template())
+        print(multismash.copy_config.get_template())  # noqa: T201
         raise typer.Exit()
 
 
