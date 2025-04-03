@@ -10,7 +10,7 @@ from typer.core import TyperGroup
 import multismash.copy_config
 import multismash.count
 import multismash.report
-import multismash.workflow
+import multismash.run
 
 
 class OrderCommands(TyperGroup):
@@ -83,7 +83,7 @@ def run(
 
     A template config file can be created with `multismash init`
     """
-    multismash.workflow.main(config, unknown_args.args)
+    multismash.run.main(config, unknown_args.args)
 
 
 # init: make a config file
