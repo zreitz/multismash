@@ -8,13 +8,12 @@ version = "0.6.0"
 description = "A snakemake-based antiSMASH wrapper for large-scale analyses"
 readme = "README.md"
 license = {file = "LICENSE.txt"}
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 authors = [
     { name = "Zachary L. Reitz", email = "zlreitz@gmail.com" },
 ]
 dependencies = [
-    "pulp<2.8.0",
-    "snakemake>=7.32.3",
+    "snakemake>=9",
     "typer>=0.12.5"
 ]
 
