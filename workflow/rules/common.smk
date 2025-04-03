@@ -18,7 +18,7 @@ def build_paths():
     # Out directory for bigscape
     paths["BIG_DIR"] = paths["OUT_DIR"] / "bigscape"
     # Pfam directory for bigscape
-    pfam = config["pfam_dir"]
+    pfam = config["bigscape_pfam"]
     if pfam:
         paths["PFAM_DIR"] = Path.resolve(config_dir / Path(pfam).expanduser())
     else:
@@ -56,6 +56,13 @@ def get_samples(paths):
                       f"with extension '{IN_EXT}'.")
 
     return GENOMES
+
+
+def get_antismash_env():
+    env = config["antismash_conda_env_name"]
+    if not env:
+        env = "envs/antismash.yaml"
+    return(env)
 
 
 def get_bigscape_env():

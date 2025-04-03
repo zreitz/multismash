@@ -1,0 +1,5 @@
+name: antismash
+channels:
+  - bioconda
+dependencies:
+  - antismash

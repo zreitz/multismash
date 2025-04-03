@@ -13,6 +13,15 @@ The pipeline can:
 3. Run [BiG-SCAPE](https://github.com/medema-group/BiG-SCAPE/wiki) on the
    resulting BGCs to visualize gene cluster families (GCFs).
 
+## TODOs
+* Add snakemake tests to go with `test/integration`
+* Add rule that runs `antismash --check-prereqs`
+* convert the awful run_antismash rule into a python script
+* update antismash install instructions
+* handle bigscape v1 and v2
+* handle antismash v7 and v8 conda
+* handle auto download of antismash databases
+
 ## Installation
 
 ### Recommended: Installing multiSMASH inside an antiSMASH conda environment

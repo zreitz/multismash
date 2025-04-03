@@ -42,17 +42,19 @@ properties:
   zip_bigscape:
     type: boolean
 
-  antismash_conda_env_name:
+  antismash_external:
     type: [string, "null"]
-  antismash_command:
-    type: string
+  antismash_conda_env:
+    type: [string, "null"]
+  antismash_databases:
+    type: [string, "null"]
 
-  bigscape_conda_env_name:
+  bigscape_external:
     type: [string, "null"]
-  bigscape_command:
-    type: [ string, "null" ]
-  pfam_dir:
-    type: [ string, "null" ]
+  bigscape_conda_env:
+    type: [string, "null"]
+  bigscape_pfam:
+    type: [string, "null"]
 
 required:
   - cores
@@ -69,7 +71,5 @@ required:
   - split_hybrids
 
   - zip_bigscape
-
-  - antismash_command
 
 additionalProperties: false
