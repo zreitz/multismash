@@ -4,32 +4,34 @@ import subprocess
 from pathlib import Path
 
 import yaml
-from snakemake.logging import logger
 from snakemake.utils import validate
 
 
-def main(configfile: Path, snakemake_args: list[str]):
-    # Catch problematic flags
-    forbidden = {
-        "--snakefile",
-        "--cores",
-        "--use-conda",
-        "--configfile",
-        "--conda-prefix",
-    }
-    forbidden = forbidden.intersection(set(snakemake_args))
-    if forbidden:
-        msg = (
-            f"Error: multiSMASH automatically sets the following flag"
-            f"{'s' if len(forbidden) > 1 else ''}: {' '.join(forbidden)}"
-        )
-        raise SystemExit(msg)
-    if "--reuse-results" in snakemake_args:
-        msg = (
-            "Error: instead of using --reuse-results, set the "
-            "antismash_reuse_results flag to be True"
-        )
-        raise SystemExit(msg)
+def build_snakemake_command(
+    configfile: Path, snakemake_args: list[str] | None = None
+) -> list[str]:
+    if snakemake_args:
+        # Catch problematic flags
+        forbidden = {
+            "--snakefile",
+            "--cores",
+            "--use-conda",
+            "--configfile",
+            "--conda-prefix",
+        }
+        forbidden = forbidden.intersection(set(snakemake_args))
+        if forbidden:
+            msg = (
+                f"Error: multiSMASH automatically sets the following flag"
+                f"{'s' if len(forbidden) > 1 else ''}: {' '.join(forbidden)}"
+            )
+            raise SystemExit(msg)
+        if "--reuse-results" in snakemake_args:
+            msg = (
+                "Error: instead of using --reuse-results, set the "
+                "antismash_reuse_results flag to be True"
+            )
+            raise SystemExit(msg)
 
     with Path.open(configfile) as yml:
         configs = yaml.safe_load(yml)
@@ -55,19 +57,24 @@ def main(configfile: Path, snakemake_args: list[str]):
     if configs["snakemake_flags"]:
         args.append(configs["snakemake_flags"])
 
-    # Only set conda flags if it's needed
-    if any((configs["run_bigscape"], configs["antismash_conda_env_name"])):
-        # Destination for conda installs
-        conda_dir = multismash_dir.joinpath("conda")
-        conda_args = [
-            "--use-conda",
-            "--conda-prefix",
-            str(conda_dir),
-        ]
-        args.extend(conda_args)
+    # TODO: Only require conda if actually required
+    # Destination for conda installs
+    conda_dir = multismash_dir.joinpath("conda")
+    conda_args = [
+        "--software-deployment-method conda",
+        "--conda-prefix",
+        str(conda_dir),
+    ]
+    args.extend(conda_args)
 
     # Any other arguments are assumed to be for snakemake
-    args.extend(snakemake_args)
+    if snakemake_args:
+        args.extend(snakemake_args)
 
-    logger.info(f"Running multiSMASH with {configs['cores']} cores")
-    subprocess.run(args, check=False)
+    return args
+
+
+def main(configfile: Path, snakemake_args: list[str] | None = None):
+    command = build_snakemake_command(configfile, snakemake_args)
+
+    subprocess.run(command, check=False)
